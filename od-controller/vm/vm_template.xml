@@ -1,0 +1,22 @@
+<domain type='kvm'>
+	<name>virtualmachine</name>
+	<uuid>c7a5fdbd-cdaf-9455-926a-d65c16db1801</uuid>
+	<memory>1048576</memory>
+	<currentMemory>1048576</currentMemory>
+	<vcpu>2</vcpu>
+	<os>
+		<type arch='x86_64' machine='pc-1.0'>hvm</type>
+	</os>
+	<devices>
+		<emulator>/usr/bin/qemu-system-x86_64</emulator>
+		<disk type='file' device='disk'>
+			<driver name='qemu' type='raw'/>
+			<source file='/home/krha/cloudlet/image/ubuntu-11.10-x86_64-server/ubuntu-11.raw' />
+			<target dev='hda' bus='ide' />
+		</disk>
+        <graphics type='vnc' port='-1' autoport='yes' keymap='en-us'/>
+	</devices>
+	<features>
+		<acpi/>
+	</features>
+</domain>
