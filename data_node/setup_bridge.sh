@@ -1,9 +1,9 @@
 #!/bin/bash
 
 BRIDGE_NAME=br0
-IF_ONE=enp0s3
-IF_TWO=enp0s8
-OD_IP=192.168.58.3
+IF_ONE=ens5
+IF_TWO=ens6
+OD_IP=192.168.58.101
 
 connect_interface() {
     local interface="$1"
