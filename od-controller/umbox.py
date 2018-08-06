@@ -25,15 +25,15 @@ def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, d
     updated_xml = umbox.get_updated_descriptor(template_xml)
     print updated_xml
 
-    # Store umbox info in the DB.
-    store_umbox_info(umbox.control_mac_address, instance_name, device_id)
-
     # Explicitly connect to hypervisor to ensure we are getting to remote libvirtd.
     vmutils.VirtualMachine.get_hypervisor_instance(is_system_level=True, host_name=data_node_ip, transport='tcp')
 
     # Then create and start the VM itself.
     vm = vmutils.VirtualMachine()
     vm.create_and_start_vm(updated_xml)
+
+    # Store umbox info in the DB.
+    store_umbox_info(umbox.control_mac_address, instance_name, device_id)
 
 
 def store_umbox_info(umbox_id, umbox_name, device_id):

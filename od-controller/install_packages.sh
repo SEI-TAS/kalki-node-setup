@@ -21,10 +21,17 @@ install_libvirt() {
     echo "Libvirt Install Complete"
 }
 
+install_postgres() {
+    echo "Installing postgresql..."
+    sudo apt-get install postgresql postgresql-contrib
+    echo "Postgresql installed"
+
+}
 
 # Install packages
 echo "Beginning packages setup..."
 update
 install_python
 install_libvirt
+install_postgres
 echo "Finished setting up packages"
