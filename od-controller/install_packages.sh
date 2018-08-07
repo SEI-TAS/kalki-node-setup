@@ -13,11 +13,6 @@ install_python() {
     echo "Python Install Complete"
 }
 
-# Note that for the libvirt-bin daemon to actually listen to incoming connections, the following config changes are needed:
-# - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tcp = 1
-# - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tls = 0
-# - /etc/libvirt/libvirtd.conf: uncomment the line and change to #auth_tcp = "none
-# - /etc/default/libvirt-bin: add -l after libvirtd_opts, and uncomment.
 install_libvirt() {
     echo "Installing Libvirt..."
     sudo apt-get -yqq install libvirt-dev

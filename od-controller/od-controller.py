@@ -57,7 +57,7 @@ def main():
 
     # print "Switch info: " + json.dumps(od.get_switch_info())
     device_id = "device1"
-    umbox.create_and_start_umbox(device_id, curr_config.data_node_ip, "test_umbox", "disk.qcow2", "vboxnet0", "vboxnet1")
+    umbox.create_and_start_umbox(device_id, curr_config.data_node_ip, "test_umbox", "/home/kalki/images/test_image.qcow2", "vboxnet0", "vboxnet1")
 
 
 if __name__ == '__main__':
