@@ -25,6 +25,9 @@ install_ovs() {
     echo "OVS Install Complete"
 }
 
+# TODO: need to setup bridge for access to ens4 and control network
+# sudo brctl addbr br-control
+# sudo brctl addif br-control ens4
 
 # Install packages
 echo "Beginning packages setup..."
