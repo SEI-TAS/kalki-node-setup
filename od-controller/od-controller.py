@@ -57,8 +57,8 @@ def main():
 
     # print "Switch info: " + json.dumps(od.get_switch_info())
     device_id = "device1"
-    data_bridge_iface = "virbr0"
-    control_bridge_iface = "virbr56"
+    data_bridge_iface = "ovs-system"
+    control_bridge_iface = "br0"
     umbox.create_and_start_umbox(device_id, curr_config.data_node_ip, "test_umbox", "/home/kalki/images/test_image.qcow2",
                                  data_bridge_iface, control_bridge_iface)
 
