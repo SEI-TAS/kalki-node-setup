@@ -6,10 +6,7 @@ auto ens3
 iface ens3 inet dhcp
 
 auto ens4
-iface ens4 inet static
-	address 192.168.58.102
-	netmask 255.255.255.0
-	gateway 192.168.58.1
+iface ens4 inet manual
 
 auto ens5
 iface ens5 inet static
@@ -23,3 +20,9 @@ iface ens6 inet static
 	netmask 255.255.255.0
 	gateway 192.168.56.1
 
+auto br-control
+iface br-control inet static
+    bridge_ports ens4
+	address 192.168.58.102
+	netmask 255.255.255.0
+	gateway 192.168.58.1
