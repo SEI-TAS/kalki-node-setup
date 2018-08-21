@@ -1,0 +1,7 @@
+<network>
+  <name>internet</name>
+  <forward mode='nat'/>
+  <bridge name='virbr57'/>
+  <ip address='192.168.57.1' netmask='255.255.255.0'>
+  </ip>
+</network>

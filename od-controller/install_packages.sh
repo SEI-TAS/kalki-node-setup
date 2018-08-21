@@ -25,6 +25,7 @@ install_postgres() {
     sudo apt-get install postgresql postgresql-contrib
     echo "Postgresql installed"
 
+    # TODO: configure pg_hba.conf to allow peer connections
 }
 
 # Install packages
