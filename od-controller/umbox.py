@@ -11,8 +11,8 @@ import vm.vm_descriptor as vm_descriptor
 
 XML_VM_TEMPLATE = "vm/vm_template.xml"
 
-UMBOX_DATA_INTERFACE = "eth0"
-UMBOX_CONTROL_INTERFACE = "eth1"
+UMBOX_DATA_TUN = "vnudata"
+UMBOX_CONTROL_TUN = "vnucont"
 
 
 def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, data_bridge, control_bridge):
@@ -75,10 +75,10 @@ class VmUmbox(object):
         xml_descriptor.set_disk_image(self.image_name, 'qcow2')
 
         print 'Adding OVS connected network interface'
-        xml_descriptor.add_bridge_interface(self.data_bridge, self.data_mac_address, target=UMBOX_DATA_INTERFACE, ovs=True)
+        xml_descriptor.add_bridge_interface(self.data_bridge, self.data_mac_address, target=UMBOX_DATA_TUN, ovs=True)
 
         print 'Adding control plane network interface'
-        xml_descriptor.add_bridge_interface(self.control_bridge, self.control_mac_address, target=UMBOX_CONTROL_INTERFACE)
+        xml_descriptor.add_bridge_interface(self.control_bridge, self.control_mac_address, target=UMBOX_CONTROL_TUN)
 
         # Remove seclabel item, which tends to generate issues when the VM is executed.
         xml_descriptor.remove_sec_label()
