@@ -41,7 +41,7 @@ def store_umbox_info(umbox_id, umbox_name, device_id):
     start_time_in_ms = int(round(time.time() * 1000))
     conn = psycopg2.connect("dbname=alerts user=alert_user password=alert_user_pwd")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO umbox (umbox_external_id, device_id, started_at) VALUES (%s, %s, %s)",
+    cursor.execute("INSERT INTO umbox_instance (umbox_external_id, device_id, started_at) VALUES (%s, %s, %s)",
                    (umbox_id, device_id, start_time_in_ms))
     conn.commit()
     cursor.close()
