@@ -92,13 +92,17 @@ class VmUmbox(object):
         try:
             # If it is, connect and destroy it, before starting a new one.
             vm.connect_to_virtual_machine_by_name(self.name)
+            print "VM with same name was already running; destroying it."
             vm.destroy()
+            print "VM destroyed."
         except vmutils.VirtualMachineException, ex:
             print "VM was not running."
             vm = vmutils.VirtualMachine()
 
         # Then create and start the VM itself.
+        print "Starting new VM."
         vm.create_and_start_vm(updated_xml)
+        print "New VM started."
 
     def generate_random_mac(self):
         """Generate a random mac. We are using te 00163e prefix used by Xensource."""
