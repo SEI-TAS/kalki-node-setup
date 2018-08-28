@@ -76,6 +76,15 @@ class VirtualMachine(object):
             raise VirtualMachineException(str(e))
 
     ################################################################################################################
+    # Lookup a specific instance by its name
+    ################################################################################################################
+    def connect_to_virtual_machine_by_name(self, name):
+        try:
+            self.vm = VirtualMachine.get_hypervisor_instance().lookupByName(name)
+        except libvirt.libvirtError, e:
+            raise VirtualMachineException(str(e))
+
+    ################################################################################################################
     # Get the XML description of a running VM.
     ################################################################################################################
     def get_running_vm_xml_string(self):

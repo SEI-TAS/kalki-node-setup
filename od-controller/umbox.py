@@ -19,18 +19,7 @@ def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, d
 
     # First generate an updated XML from the template to use when creating the VM.
     umbox = VmUmbox(instance_name, image_name, data_bridge, control_bridge)
-    template_xml_file = os.path.abspath(XML_VM_TEMPLATE)
-    with open(template_xml_file, 'r') as xml_file:
-        template_xml = xml_file.read().replace('\n', '')
-    updated_xml = umbox.get_updated_descriptor(template_xml)
-    print updated_xml
-
-    # Explicitly connect to hypervisor to ensure we are getting to remote libvirtd.
-    vmutils.VirtualMachine.get_hypervisor_instance(is_system_level=True, host_name=data_node_ip, transport='tcp')
-
-    # Then create and start the VM itself.
-    vm = vmutils.VirtualMachine()
-    vm.create_and_start_vm(updated_xml)
+    umbox.start(data_node_ip)
 
     # Store umbox info in the DB.
     store_umbox_info(umbox.control_mac_address, instance_name, device_id)
@@ -61,8 +50,8 @@ class VmUmbox(object):
         self.image_name = image_name
         self.data_bridge = data_bridge
         self.control_bridge = control_bridge
-        self.data_mac_address = generate_random_mac()
-        self.control_mac_address = generate_random_mac()
+        self.data_mac_address = self.generate_random_mac()
+        self.control_mac_address = self.generate_random_mac()
 
     def get_updated_descriptor(self, xml_descriptor_string):
         """Updates an XML containing the description of the VM with the current info of this VM."""
@@ -86,13 +75,37 @@ class VmUmbox(object):
         updated_xml_descriptor_string = xml_descriptor.get_as_string()
         return updated_xml_descriptor_string
 
+    def start(self, hypervisor_host_ip):
+        """Creates a new VM using the XML template plus the information set up for this umbox."""
+        # Explicitly connect to hypervisor to ensure we are getting to remote libvirtd.
+        vmutils.VirtualMachine.get_hypervisor_instance(is_system_level=True, host_name=hypervisor_host_ip, transport='tcp')
 
-def generate_random_mac():
-    """Generate a random mac. We are using te 00163e prefix used by Xensource."""
-    mac = [
-        0x00, 0x16, 0x3e,
-        random.randint(0x00, 0x7f),
-        random.randint(0x00, 0xff),
-        random.randint(0x00, 0xff)
-    ]
-    return ':'.join(map(lambda x: "%02x" % x, mac))
+        # Set up VM information from template and umbox data.
+        template_xml_file = os.path.abspath(XML_VM_TEMPLATE)
+        with open(template_xml_file, 'r') as xml_file:
+            template_xml = xml_file.read().replace('\n', '')
+        updated_xml = self.get_updated_descriptor(template_xml)
+        print updated_xml
+
+        # Check if the VM is already running.
+        vm = vmutils.VirtualMachine()
+        try:
+            # If it is, connect and destroy it, before starting a new one.
+            vm.connect_to_virtual_machine_by_name(self.name)
+            vm.destroy()
+        except vmutils.VirtualMachineException, ex:
+            print "VM was not running."
+            vm = vmutils.VirtualMachine()
+
+        # Then create and start the VM itself.
+        vm.create_and_start_vm(updated_xml)
+
+    def generate_random_mac(self):
+        """Generate a random mac. We are using te 00163e prefix used by Xensource."""
+        mac = [
+            0x00, 0x16, 0x3e,
+            random.randint(0x00, 0x7f),
+            random.randint(0x00, 0xff),
+            random.randint(0x00, 0xff)
+        ]
+        return ':'.join(map(lambda x: "%02x" % x, mac))
