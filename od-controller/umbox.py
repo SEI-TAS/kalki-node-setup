@@ -2,7 +2,6 @@
 import uuid
 import os.path
 import random
-import time
 
 import psycopg2
 
@@ -27,11 +26,10 @@ def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, d
 
 def store_umbox_info(umbox_id, umbox_name, device_id):
     # Store VM Info (at least control MAC) in DB
-    start_time_in_ms = int(round(time.time() * 1000))
-    conn = psycopg2.connect("dbname=alerts user=alert_user password=alert_user_pwd")
+    conn = psycopg2.connect("dbname=kalkidb user=kalkiuser password=kalkipass")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO umbox_instance (umbox_external_id, device_id, started_at) VALUES (%s, %s, %s)",
-                   (umbox_id, device_id, start_time_in_ms))
+    cursor.execute("INSERT INTO umbox_instance (umbox_external_id, device_id) VALUES (%s, %s)",
+                   (umbox_id, device_id))
     conn.commit()
     cursor.close()
     conn.close()

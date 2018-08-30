@@ -56,7 +56,7 @@ def main():
     curr_config = config.Config(parse_arguments())
 
     # print "Switch info: " + json.dumps(od.get_switch_info())
-    device_id = "device1"
+    device_id = "1"
     data_bridge_iface = "br0"   # OpenVS bridge
     control_bridge_iface = "br-control"
     disk_image_path = "/home/kalki/images/test_image.qcow2"
