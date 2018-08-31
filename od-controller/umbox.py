@@ -8,6 +8,10 @@ import psycopg2
 import vm.vmutils as vmutils
 import vm.vm_descriptor as vm_descriptor
 
+DB_NAME = "kalkidb"
+DB_USER = "kalkiuser"
+DB_PASS = "kalkipass"
+
 XML_VM_TEMPLATE = "vm/vm_template.xml"
 
 UMBOX_DATA_TUN = "vnudata"
@@ -26,7 +30,7 @@ def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, d
 
 def store_umbox_info(umbox_id, umbox_name, device_id):
     # Store VM Info (at least control MAC) in DB
-    conn = psycopg2.connect("dbname=kalkidb user=kalkiuser password=kalkipass")
+    conn = psycopg2.connect("dbname=" + DB_NAME + " user=" + DB_USER+ " password=" + DB_PASS)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO umbox_instance (umbox_external_id, device_id) VALUES (%s, %s)",
                    (umbox_id, device_id))
