@@ -25,7 +25,7 @@ def execute_dump_flows_command(server_ip):
 
 
 def test():
-    server_ip = 192.168.58.102
+    server_ip = "192.168.58.102"
     execute_show_command(server_ip)
     execute_dump_flows_command(server_ip)
 
