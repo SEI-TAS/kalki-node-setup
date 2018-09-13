@@ -2,6 +2,7 @@
 import uuid
 import os.path
 import random
+import re
 
 import psycopg2
 
@@ -16,6 +17,15 @@ XML_VM_TEMPLATE = "vm/vm_template.xml"
 
 UMBOX_DATA_TUN = "vnudata"
 UMBOX_CONTROL_TUN = "vnucont"
+
+
+def build_mbox_name(state_name, state_actions):
+    mbox_name = state_name
+    if len(state_actions) >= 2:
+        for i in range(0, len(state_actions)):
+            regex = re.compile('[^a-zA-Z]')
+            mbox_name = regex.sub('', state_name) + regex.sub('', state_actions[i]) + str(i)
+    return mbox_name
 
 
 def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, data_bridge, control_bridge):

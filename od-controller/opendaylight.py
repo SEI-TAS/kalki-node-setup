@@ -41,6 +41,8 @@ def get_switch_info():
     connections = []
 
     reply = od_restconf_request("get", "operational", NODES_URL)
+    print reply
+
     if len(reply["nodes"]["node"]) > 0:
         json_node = reply["nodes"]["node"][0]
 
@@ -69,14 +71,42 @@ def get_switch_info():
     return {"id": switch_id, "connections": connections}
 
 
-def set_new_flow(switch_id, flow_id):
+def set_new_flow(switch_id, flow_id, from_port, to_port):
     """Sets a flow for the given switch."""
 
-    flow_instructions = {}
+    defaultPriority = 500
+    #flow_instructions.update({"ingressPort": from_port})
 
-    headers = {"Content-Type": "application/xml"}
+    match_data = {}
+
+    action = {}
+    action["order"] = 0
+    action["output-action"] = {"output-node-connector": to_port, "max-length": 65535}
+    instruction_data = {}
+    instruction_data["order"] = "0"
+    instruction_data["apply-actions"] = {"action": [action]}
+
+    flow_data = {}
+    flow_data["strict"] = False
+    flow_data["instructions"] = {"instruction": [instruction_data]}
+    flow_data["match"] = match_data
+    flow_data["table_id"] = 0
+    flow_data["id"] = flow_id
+    flow_data["cookie_mask"] = 255
+    flow_data["installHw"] = False
+    flow_data["hard-timeout"] = 12
+    flow_data["cookie"] = 4
+    flow_data["idle-timeout"] = 34
+    flow_data["flow-name"] = ""
+    flow_data["priority"] = defaultPriority
+    flow_data["barrier"] = False
+
+    flow = {"flow": [flow_data]}
+
+    headers = {"Content-Type": "application/json"}
     reply = od_restconf_request("post", "config", NODES_URL + FLOW_URL.format(switch_id, flow_id),
-                                headers=headers, payload=flow_instructions)
+                                headers=headers, payload=json.dumps(flow))
+    return reply
 
 
 def remove_flow():

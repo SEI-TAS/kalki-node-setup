@@ -20,6 +20,13 @@ install_libvirt() {
     echo "Libvirt Install Complete"
 }
 
+install_ovs_tools() {
+    echo "Installing OVS tools..."
+    sudo apt-get -yqq install openvswitch-common openvswitch-switch
+    echo "OVS Install Complete"
+}
+
+
 install_postgres() {
     echo "Installing postgresql..."
     sudo apt-get install postgresql postgresql-contrib
@@ -33,6 +40,7 @@ echo "Beginning packages setup..."
 update
 install_python
 install_libvirt
+install_ovs_tools
 install_postgres
 echo "Finished setting up packages"
 
