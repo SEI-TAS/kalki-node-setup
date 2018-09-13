@@ -4,10 +4,10 @@ BRIDGE_NAME=br0
 IF_ONE=ens5
 IF_TWO=ens6
 
-CONTROLLER_IP=127.0.0.1
-CONTROLLER_PORT=6653
+#CONTROLLER_IP=127.0.0.1
+#CONTROLLER_PORT=6653
 
-OVS_SWITCHD_PORT=6654
+BRIDGE_PORT=6653
 
 connect_interface() {
     local interface="$1"
@@ -29,7 +29,7 @@ setup_bridge() {
     connect_interface $IF_TWO 2
 
     sudo ovs-vsctl set bridge $BRIDGE_NAME protocols=OpenFlow13
-    sudo ovs-vsctl set-controller $BRIDGE_NAME ptcp:$OVS_SWITCHD_PORT
+    sudo ovs-vsctl set-controller $BRIDGE_NAME ptcp:$BRIDGE_PORT
     sudo ovs-vsctl set controller $BRIDGE_NAME connection-mode=out-of-band
 
     echo "Bridge setup complete"
