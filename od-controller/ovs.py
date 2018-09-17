@@ -5,8 +5,7 @@ OF_COMMAND_BASE = "sudo ovs-ofctl -O OpenFlow13"
 OF_COMMAND_SERVER = "tcp:{}:{}"
 DEFAULT_SWITCH_PORT = 6653
 
-IP_PORT_RULE = "ip, priority={}, in_port={}, nw_src={}, nw_dst={}, actions=output:{}"
-
+DEFAULT_PRIORITY = "200"
 
 class OpenFlowRule(object):
     """Represents an OF rule."""
@@ -15,7 +14,7 @@ class OpenFlowRule(object):
         self.type = type
         self.in_port = in_port
         self.out_port = out_port
-        self.priority = None
+        self.priority = DEFAULT_PRIORITY
         self.src_ip = None
         self.dest_ip = None
 
