@@ -89,7 +89,7 @@ def test():
     switch.execute_dump_flows_command()
 
     rule = OpenFlowRule("ip", "1", None)
-    rule.dst_ip = "192.168.57.102"
+    rule.dest_ip = "192.168.57.102"
     switch.set_rule(rule)
 
 
