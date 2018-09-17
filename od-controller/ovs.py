@@ -43,6 +43,8 @@ class OpenFlowRule(object):
         else:
             rule_string += "actions=drop, "
 
+        return rule_string
+
 
 class RemoteVSwitch(object):
     """Represents a remove OVS switch. Communicates to it through OpenFlow using the ovs-ofctl local command line
@@ -75,6 +77,7 @@ class RemoteVSwitch(object):
     def set_rule(self, of_rule):
         """Adds a new rule/flow to the switch."""
         rule_string = of_rule.build_rule()
+        print("Sending rule: " + rule_string)
         self.send_openflow_command("add-flow", rule_string)
 
 
