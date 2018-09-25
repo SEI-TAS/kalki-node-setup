@@ -15,8 +15,17 @@ DB_PASS = "kalkipass"
 
 XML_VM_TEMPLATE = "vm/vm_template.xml"
 
+# Names for the TUN/TAP virtual interfaces on the data node that handle the VM interfaces.
+# TODO: should be numbered to allow for multiple VMs.
 UMBOX_DATA_TUN = "vnudata"
 UMBOX_CONTROL_TUN = "vnucont"
+
+# Names of the virtual bridges in the data node that will be connected to the VM.
+OVS_VIRTUAL_SWITCH = "ovs-br"
+CONTROL_PLANE_BRIDGE = "br-control"
+
+# Path to stored VM umbox images in data node.
+DATA_NODE_IMAGES_PATH = "/home/kalki/images/"
 
 
 def build_mbox_name(state_name, state_actions):
@@ -28,10 +37,12 @@ def build_mbox_name(state_name, state_actions):
     return mbox_name
 
 
-def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, data_bridge, control_bridge):
+def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, data_bridge=OVS_VIRTUAL_SWITCH,
+                           control_bridge=CONTROL_PLANE_BRIDGE):
 
     # First generate an updated XML from the template to use when creating the VM.
-    umbox = VmUmbox(instance_name, image_name, data_bridge, control_bridge)
+    full_image_path = os.path.join(DATA_NODE_IMAGES_PATH, image_name)
+    umbox = VmUmbox(instance_name, full_image_path, data_bridge, control_bridge)
     umbox.start(data_node_ip)
 
     # Store umbox info in the DB.
@@ -54,12 +65,12 @@ def store_umbox_info(umbox_id, umbox_name, device_id):
 class VmUmbox(object):
     """Class that stores information about a VM that is working as a umbox."""
 
-    def __init__(self, umbox_name, image_name, data_bridge, control_bridge):
+    def __init__(self, umbox_name, image_path, data_bridge, control_bridge):
         """Default constructor."""
 
         self.id = str(uuid.uuid4())
         self.name = umbox_name
-        self.image_name = image_name
+        self.image_path = image_path
         self.data_bridge = data_bridge
         self.control_bridge = control_bridge
         self.data_mac_address = self.generate_random_mac()
@@ -73,7 +84,7 @@ class VmUmbox(object):
 
         xml_descriptor.set_uuid(self.id)
         xml_descriptor.set_name(self.name)
-        xml_descriptor.set_disk_image(self.image_name, 'qcow2')
+        xml_descriptor.set_disk_image(self.image_path, 'qcow2')
 
         print 'Adding OVS connected network interface'
         xml_descriptor.add_bridge_interface(self.data_bridge, self.data_mac_address, target=UMBOX_DATA_TUN, ovs=True)
@@ -125,3 +136,16 @@ class VmUmbox(object):
             random.randint(0x00, 0xff)
         ]
         return ':'.join(map(lambda x: "%02x" % x, mac))
+
+
+def test():
+    # Test code.
+    data_node_ip = "192.168.58.102"
+    device_id = "1"
+    image_file = "test_image.qcow2"
+    instance_name = "test_umbox"
+    create_and_start_umbox(device_id, data_node_ip, instance_name, image_file)
+
+
+if __name__ == '__main__':
+    test()
