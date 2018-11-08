@@ -142,7 +142,7 @@ def test():
     # Test code.
     data_node_ip = "192.168.58.102"
     device_id = "1"
-    image_file = "test_image.qcow2"
+    image_file = "umbox-sniffer.qcow2"
     instance_name = "test_umbox"
     create_and_start_umbox(device_id, data_node_ip, instance_name, image_file)
 
