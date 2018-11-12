@@ -1,5 +1,6 @@
 
 import uuid
+import os
 import os.path
 import random
 import re
@@ -26,6 +27,7 @@ CONTROL_PLANE_BRIDGE = "br-control"
 
 # Path to stored VM umbox images in data node.
 DATA_NODE_IMAGES_PATH = "/home/kalki/images/"
+INSTANCES_FOLDER = "instances"
 
 
 def build_mbox_name(state_name, state_actions):
@@ -43,27 +45,34 @@ def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, d
     # First create a linked qcow2 file so that we don't modify the template, and we don't have to copy the complete image.
     full_template_path = os.path.join(DATA_NODE_IMAGES_PATH, image_name)
     template_image = vm.diskimage.DiskImage(full_template_path)
-    full_instance_path = os.path.join(DATA_NODE_IMAGES_PATH, "instances", instance_name)
+    full_instance_path = os.path.join(DATA_NODE_IMAGES_PATH, INSTANCES_FOLDER, instance_name)
     instance_image = template_image.create_linked_qcow2_image(full_instance_path)
 
     umbox = VmUmbox(instance_name, instance_image.filepath, data_bridge, control_bridge)
     umbox.start(data_node_ip)
 
     # Store umbox info in the DB.
-    store_umbox_info(umbox.control_mac_address, instance_name, device_id)
+    # TODO: instead of image_name it has to be id....
+    store_umbox_info(umbox.control_mac_address, image_name, instance_name, device_id)
 
 
-def store_umbox_info(umbox_id, umbox_name, device_id):
+def store_umbox_info(alerter_id, umbox_image_id, container_id, device_id):
     # Store VM Info (at least control MAC) in DB
     conn = psycopg2.connect("dbname=" + DB_NAME + " user=" + DB_USER+ " password=" + DB_PASS)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO umbox_instance (umbox_external_id, device_id) VALUES (%s, %s)",
-                   (umbox_id, device_id))
+    cursor.execute("INSERT INTO umbox_instance (alerter_id, umbox_image_id, container_id, device_id) VALUES (%s, %s)",
+                   (alerter_id, umbox_image_id, container_id, device_id))
     conn.commit()
     cursor.close()
     conn.close()
 
     print "Stored umbox info in DB."
+
+
+def stop_umbox(data_node_ip, instance_name):
+    """Stops a running instance of an umbox."""
+    umbox = VmUmbox(instance_name, None, None, None)
+    umbox.stop(data_node_ip)
 
 
 class VmUmbox(object):
@@ -81,6 +90,9 @@ class VmUmbox(object):
         self.control_bridge = control_bridge
         self.data_mac_address = self.generate_random_mac()
         self.control_mac_address = self.generate_random_mac()
+
+        if self.image_path is None:
+            self.image_path = os.path.join(DATA_NODE_IMAGES_PATH, INSTANCES_FOLDER, self.name)
 
     def get_updated_descriptor(self, xml_descriptor_string):
         """Updates an XML containing the description of the VM with the current info of this VM."""
@@ -106,10 +118,13 @@ class VmUmbox(object):
         updated_xml_descriptor_string = xml_descriptor.get_as_string()
         return updated_xml_descriptor_string
 
+    def _connect_to_remote_hypervisor(self, hypervisor_host_ip):
+        """Explicitly connect to hypervisor to ensure we are getting to remote libvirtd."""
+        vmutils.VirtualMachine.get_hypervisor_instance(is_system_level=True, host_name=hypervisor_host_ip, transport='tcp')
+
     def start(self, hypervisor_host_ip):
         """Creates a new VM using the XML template plus the information set up for this umbox."""
-        # Explicitly connect to hypervisor to ensure we are getting to remote libvirtd.
-        vmutils.VirtualMachine.get_hypervisor_instance(is_system_level=True, host_name=hypervisor_host_ip, transport='tcp')
+        self._connect_to_remote_hypervisor(hypervisor_host_ip)
 
         # Set up VM information from template and umbox data.
         template_xml_file = os.path.abspath(XML_VM_TEMPLATE)
@@ -144,6 +159,33 @@ class VmUmbox(object):
             random.randint(0x00, 0xff)
         ]
         return ':'.join(map(lambda x: "%02x" % x, mac))
+
+    def pause(self, hypervisor_host_ip):
+        self._connect_to_remote_hypervisor(hypervisor_host_ip)
+        vm = vmutils.VirtualMachine()
+        try:
+            vm.connect_to_virtual_machine_by_name(self.name)
+            vm.pause()
+        except:
+            print("VM not found.")
+
+    def unpause(self, hypervisor_host_ip):
+        self._connect_to_remote_hypervisor(hypervisor_host_ip)
+        vm = vmutils.VirtualMachine()
+        try:
+            vm.connect_to_virtual_machine_by_name(self.name)
+            vm.unpause()
+        except:
+            print("VM not found.")
+
+    def stop(self, hypervisor_host_ip):
+        self._connect_to_remote_hypervisor(hypervisor_host_ip)
+        vm = vmutils.VirtualMachine()
+        try:
+            vm.connect_to_virtual_machine_by_name(self.name)
+            vm.destroy()
+        except:
+            print("VM not found.")
 
 
 def test():
