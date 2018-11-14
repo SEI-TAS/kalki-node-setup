@@ -110,7 +110,7 @@ class VmUmbox(object):
     def load_image_info(self):
         conn = psycopg2.connect(PG_DB_STRING)
         cursor = conn.cursor()
-        cursor.execute("SELECT path, id FROM umbox_image WHERE image_name=%s", (self.image_name))
+        cursor.execute("SELECT path, id FROM umbox_image WHERE image_name=%s", (self.image_name,))
         image_info = cursor.fetchone()
         self.image_path = image_info[0]
         self.image_id = image_info[1]
