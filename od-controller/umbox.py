@@ -99,7 +99,7 @@ class VmUmbox(object):
         """Store VM Info (at least control MAC) in DB"""
         conn = psycopg2.connect(PG_DB_STRING)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO umbox_instance (alerter_id, umbox_image_id, container_id, device_id) VALUES (%s, %s)",
+        cursor.execute("INSERT INTO umbox_instance (alerter_id, umbox_image_id, container_id, device_id) VALUES (%s, %s, %s, %s)",
                        (self.control_mac_address, self.image_id, self.name, self.device_id))
         conn.commit()
         cursor.close()
