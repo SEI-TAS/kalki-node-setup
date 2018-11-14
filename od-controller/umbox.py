@@ -48,7 +48,7 @@ def create_and_start_umbox(data_node_ip, device_id, image_name,
                            data_bridge=OVS_VIRTUAL_SWITCH,
                            control_bridge=CONTROL_PLANE_BRIDGE):
     umbox = VmUmbox(None, image_name, device_id, data_bridge, control_bridge)
-    umbox.create_linked_image()
+    #umbox.create_linked_image()
     umbox.start(data_node_ip)
     umbox.store_info()
 
@@ -119,6 +119,7 @@ class VmUmbox(object):
 
     def create_linked_image(self):
         """Create a linked qcow2 file so that we don't modify the template, and we don't have to copy the complete image."""
+        # TODO: find way to do this remotely.
         template_image = vm.diskimage.DiskImage(self.image_path)
         template_image.create_linked_qcow2_image(self.instance_disk_path)
 
@@ -130,7 +131,9 @@ class VmUmbox(object):
 
         xml_descriptor.set_uuid(self.id)
         xml_descriptor.set_name(self.name)
-        xml_descriptor.set_disk_image(self.instance_disk_path, 'qcow2')
+
+        # TODO: change this back to instance_disk_path when we are able to create it.
+        xml_descriptor.set_disk_image(self.image_path, 'qcow2')
 
         data_iface_name = UMBOX_DATA_TUN + str(self.numeric_id)
         print 'Adding OVS connected network interface, using tap: ' + data_iface_name
@@ -212,6 +215,8 @@ class VmUmbox(object):
         try:
             vm.connect_to_virtual_machine_by_name(self.name)
             vm.destroy()
+
+            #TODO: destroy instance image file.
         except:
             print("VM not found.")
 
