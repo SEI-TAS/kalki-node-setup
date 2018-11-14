@@ -4,6 +4,7 @@ import os
 import os.path
 import random
 import re
+from argparse import ArgumentParser
 
 import psycopg2
 
@@ -11,9 +12,11 @@ import vm.vmutils as vmutils
 import vm.vm_descriptor as vm_descriptor
 import vm.diskimage
 
+# DB Info.
 DB_NAME = "kalkidb"
 DB_USER = "kalkiuser"
 DB_PASS = "kalkipass"
+PG_DB_STRING = "dbname=" + DB_NAME + " user=" + DB_USER + " password=" + DB_PASS
 
 XML_VM_TEMPLATE = "vm/vm_template.xml"
 
@@ -29,6 +32,8 @@ CONTROL_PLANE_BRIDGE = "br-control"
 DATA_NODE_IMAGES_PATH = "/home/kalki/images/"
 INSTANCES_FOLDER = "instances"
 
+NUM_SEPARATOR = "-"
+
 
 def build_mbox_name(state_name, state_actions):
     mbox_name = state_name
@@ -39,60 +44,83 @@ def build_mbox_name(state_name, state_actions):
     return mbox_name
 
 
-def create_and_start_umbox(device_id, data_node_ip, instance_name, image_name, data_bridge=OVS_VIRTUAL_SWITCH,
+def create_and_start_umbox(data_node_ip, device_id, image_name,
+                           data_bridge=OVS_VIRTUAL_SWITCH,
                            control_bridge=CONTROL_PLANE_BRIDGE):
-
-    # First create a linked qcow2 file so that we don't modify the template, and we don't have to copy the complete image.
-    full_template_path = os.path.join(DATA_NODE_IMAGES_PATH, image_name)
-    template_image = vm.diskimage.DiskImage(full_template_path)
-    full_instance_path = os.path.join(DATA_NODE_IMAGES_PATH, INSTANCES_FOLDER, instance_name)
-    instance_image = template_image.create_linked_qcow2_image(full_instance_path)
-
-    umbox = VmUmbox(instance_name, instance_image.filepath, data_bridge, control_bridge)
+    umbox = VmUmbox(None, image_name, device_id, data_bridge, control_bridge)
+    umbox.create_linked_image()
     umbox.start(data_node_ip)
+    umbox.store_info()
 
-    # Store umbox info in the DB.
-    # TODO: instead of image_name it has to be id....
-    store_umbox_info(umbox.control_mac_address, image_name, instance_name, device_id)
-
-
-def store_umbox_info(alerter_id, umbox_image_id, container_id, device_id):
-    # Store VM Info (at least control MAC) in DB
-    conn = psycopg2.connect("dbname=" + DB_NAME + " user=" + DB_USER+ " password=" + DB_PASS)
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO umbox_instance (alerter_id, umbox_image_id, container_id, device_id) VALUES (%s, %s)",
-                   (alerter_id, umbox_image_id, container_id, device_id))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    print "Stored umbox info in DB."
+    return umbox
 
 
 def stop_umbox(data_node_ip, instance_name):
     """Stops a running instance of an umbox."""
-    umbox = VmUmbox(instance_name, None, None, None)
+    umbox = VmUmbox(instance_name)
     umbox.stop(data_node_ip)
 
 
 class VmUmbox(object):
     """Class that stores information about a VM that is working as a umbox."""
 
-    def __init__(self, umbox_name, image_path, data_bridge, control_bridge):
+    def __init__(self, umbox_name, image_name=None, device_id=None, data_bridge=None, control_bridge=None):
         """Default constructor."""
-
-        unique_id = uuid.uuid4()
-        self.id = str(unique_id)
-        self.numeric_id = unique_id.int
         self.name = umbox_name
-        self.image_path = image_path
+        self.image_name = image_name
+        self.device_id = device_id
         self.data_bridge = data_bridge
         self.control_bridge = control_bridge
-        self.data_mac_address = self.generate_random_mac()
-        self.control_mac_address = self.generate_random_mac()
 
-        if self.image_path is None:
-            self.image_path = os.path.join(DATA_NODE_IMAGES_PATH, INSTANCES_FOLDER, self.name)
+        self.image_id = None
+        self.image_path = None
+        if self.name is None:
+            # For new VMs, generate random uuids, ids, and macs.
+            unique_id = uuid.uuid4()
+            self.id = str(unique_id)
+            self.numeric_id = random.randint(1, 999)
+            self.data_mac_address = self.generate_random_mac()
+            self.control_mac_address = self.generate_random_mac()
+
+            if self.image_name is not None:
+                self.load_image_info()
+                self.name = self.image_name + NUM_SEPARATOR + str(self.numeric_id)
+        else:
+            self.id = None
+            self.numeric_id = self.name[self.name.rfind(NUM_SEPARATOR) + 1:]
+            self.data_mac_address = None
+            self.control_mac_address = None
+
+        self.instance_disk_path = os.path.join(DATA_NODE_IMAGES_PATH, INSTANCES_FOLDER, self.name)
+
+        print("VM name: " + self.name)
+
+    def store_info(self):
+        """Store VM Info (at least control MAC) in DB"""
+        conn = psycopg2.connect(PG_DB_STRING)
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO umbox_instance (alerter_id, umbox_image_id, container_id, device_id) VALUES (%s, %s)",
+                       (self.control_mac_address, self.image_id, self.name, self.device_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        print "Stored umbox info in DB."
+
+    def load_image_info(self):
+        conn = psycopg2.connect(PG_DB_STRING)
+        cursor = conn.cursor()
+        cursor.execute("SELECT path, id FROM umbox_image WHERE image_name=%s", self.image_name)
+        image_info = cursor.fetchone()
+        self.image_path = image_info[0]
+        self.image_id = image_info[1]
+        cursor.close()
+        conn.close()
+
+    def create_linked_image(self):
+        """Create a linked qcow2 file so that we don't modify the template, and we don't have to copy the complete image."""
+        template_image = vm.diskimage.DiskImage(self.image_path)
+        template_image.create_linked_qcow2_image(self.instance_disk_path)
 
     def get_updated_descriptor(self, xml_descriptor_string):
         """Updates an XML containing the description of the VM with the current info of this VM."""
@@ -102,7 +130,7 @@ class VmUmbox(object):
 
         xml_descriptor.set_uuid(self.id)
         xml_descriptor.set_name(self.name)
-        xml_descriptor.set_disk_image(self.image_path, 'qcow2')
+        xml_descriptor.set_disk_image(self.instance_disk_path, 'qcow2')
 
         data_iface_name = UMBOX_DATA_TUN + str(self.numeric_id)
         print 'Adding OVS connected network interface, using tap: ' + data_iface_name
@@ -188,14 +216,31 @@ class VmUmbox(object):
             print("VM not found.")
 
 
-def test():
-    # Test code.
-    data_node_ip = "192.168.58.102"
-    device_id = "1"
-    image_file = "umbox-sniffer.qcow2"
-    instance_name = "umbox-sniffer-1"
-    create_and_start_umbox(device_id, data_node_ip, instance_name, image_file)
+def parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument("-c", "--command", dest="command", required=True, help="Command: start or stop")
+    parser.add_argument("-n", "--node", dest="datanodeip", required=True, help="IP of the data node")
+    parser.add_argument("-d", "--deviceid", dest="deviceid", required=False, help="device id")
+    parser.add_argument("-i", "--image", dest="imagename", required=False, help="name of the umbox image")
+    parser.add_argument("-u", "--umbox", dest="umboxname", required=False, help="name of the umbox instance")
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    args = parse_arguments()
+    print("Command: " + args.command)
+    print("Data node to use: " + args.datanodeip)
+    if args.command == "start":
+        print("Device ID: " + args.deviceid)
+        print("Image name: " + args.imagename)
+
+        create_and_start_umbox(args.datanodeip, args.deviceid, args.imagename)
+    else:
+        print("Instance: " + args.umboxname)
+
+        stop_umbox(args.datanodeip, args.umboxname)
 
 
 if __name__ == '__main__':
-    test()
+    main()
