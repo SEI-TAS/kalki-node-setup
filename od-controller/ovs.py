@@ -107,8 +107,8 @@ def main():
 
     if args.command == "add_rule":
         print("Device IP: " + args.deviceip)
-        print("Input port: " + args.inport)
-        print("Output port: " + args.outport)
+        print("Input port: " + str(args.inport))
+        print("Output port: " + str(args.outport))
 
         rule = OpenFlowRule("ip", None, args.outport)
         rule.dest_ip = args.deviceip
