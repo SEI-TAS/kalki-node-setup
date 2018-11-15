@@ -60,6 +60,8 @@ def stop_umbox(data_node_ip, instance_name):
     umbox = VmUmbox(instance_name)
     umbox.stop(data_node_ip)
 
+    # TODO: mark instance as stopped in DB, or delete it.
+
 
 class VmUmbox(object):
     """Class that stores information about a VM that is working as a umbox."""

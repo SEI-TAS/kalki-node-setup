@@ -1,11 +1,13 @@
 import subprocess
 import shlex
+from argparse import ArgumentParser
 
 OF_COMMAND_BASE = "sudo ovs-ofctl -O OpenFlow13"
 OF_COMMAND_SERVER = "tcp:{}:{}"
 DEFAULT_SWITCH_PORT = 6653
 
 DEFAULT_PRIORITY = "200"
+
 
 class OpenFlowRule(object):
     """Represents an OF rule."""
@@ -73,25 +75,48 @@ class RemoteVSwitch(object):
         """Send the dump-flows command through OF to remote switch."""
         return self.send_openflow_command("dump-flows")
 
-    def set_rule(self, of_rule):
+    def add_rule(self, of_rule):
         """Adds a new rule/flow to the switch."""
         rule_string = of_rule.build_rule()
-        print("Sending rule: " + rule_string)
+        print("Adding rule: " + rule_string)
         self.send_openflow_command("add-flow", rule_string)
 
+    def remove_rule(self, of_rule):
+        """Removes a rule/flow from the switch."""
+        rule_string = of_rule.build_rule()
+        print("Removing rule: " + rule_string)
+        self.send_openflow_command("del-flow", rule_string)
 
 
-def test():
-    """Simple execution to test functionality."""
-    server_ip = "192.168.58.102"
-    switch = RemoteVSwitch(server_ip, DEFAULT_SWITCH_PORT)
-    switch.execute_show_command()
-    switch.execute_dump_flows_command()
+def parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument("-c", "--command", dest="command", required=True, help="Command: start or stop")
+    parser.add_argument("-n", "--node", dest="datanodeip", required=True, help="IP of the data node")
+    parser.add_argument("-d", "--deviceip", dest="deviceip", required=True, help="device IP")
+    parser.add_argument("-i", "--inport", dest="inport", required=False, help="Input port on virtual switch")
+    parser.add_argument("-o", "--outport", dest="outport", required=True, help="Output port on virtual switch")
+    args = parser.parse_args()
+    return args
 
-    rule = OpenFlowRule("ip", "1", None)
-    rule.dest_ip = "192.168.57.102"
-    switch.set_rule(rule)
+
+def main():
+    args = parse_arguments()
+    print("Command: " + args.command)
+    print("Data node to use: " + args.datanodeip)
+    switch = RemoteVSwitch(args.datanodeip, DEFAULT_SWITCH_PORT)
+
+    if args.command == "add_rule":
+        print("Device IP: " + args.deviceip)
+        print("Input port: " + args.inport)
+        print("Output port: " + args.outport)
+
+        rule = OpenFlowRule("ip", None, args.outport)
+        rule.dest_ip = args.deviceip
+        switch.add_rule(rule)
+    else:
+        switch.execute_show_command()
+        switch.execute_dump_flows_command()
 
 
 if __name__ == "__main__":
-    test()
+    main()
