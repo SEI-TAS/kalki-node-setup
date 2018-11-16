@@ -88,7 +88,7 @@ class RemoteVSwitch(object):
         """Removes a rule/flow from the switch."""
         rule_string = of_rule.build_rule()
         print("Removing rule: " + rule_string)
-        self._send_openflow_command("del-flow", rule_string)
+        self._send_openflow_command("del-flows", rule_string)
 
 
 class RemoteOVSDB(object):
