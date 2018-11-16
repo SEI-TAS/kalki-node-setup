@@ -257,6 +257,9 @@ def parse_arguments():
 
 
 def main():
+    global logger
+    logger = setup_custom_logger("main")
+
     args = parse_arguments()
     logger.info("Command: " + args.command)
     logger.info("Data node to use: " + args.datanodeip)
