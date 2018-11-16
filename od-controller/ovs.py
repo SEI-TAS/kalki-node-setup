@@ -148,8 +148,9 @@ def main():
         if args.command == "add_rule":
             switch.add_rule(rule)
         else:
-            # Have to disable priority as it is not accepted when deleting flows.
+            # Have to disable priority and output as that is not accepted when deleting flows.
             rule.priority = None
+            rule.out_port = None
             switch.remove_rule(rule)
     else:
         switch.execute_show_command()
