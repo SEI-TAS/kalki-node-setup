@@ -92,9 +92,8 @@ def parse_arguments():
     parser = ArgumentParser()
     parser.add_argument("-c", "--command", dest="command", required=True, help="Command: start or stop")
     parser.add_argument("-n", "--node", dest="datanodeip", required=True, help="IP of the data node")
-    parser.add_argument("-d", "--deviceip", dest="deviceip", required=True, help="device IP")
-    parser.add_argument("-i", "--inport", dest="inport", required=False, help="Input port on virtual switch")
-    parser.add_argument("-o", "--outport", dest="outport", required=True, help="Output port on virtual switch")
+    parser.add_argument("-d", "--deviceip", dest="deviceip", required=False, help="device IP")
+    parser.add_argument("-o", "--outport", dest="outport", required=False, help="Output port on virtual switch")
     args = parser.parse_args()
     return args
 
@@ -105,14 +104,19 @@ def main():
     print("Data node to use: " + args.datanodeip)
     switch = RemoteVSwitch(args.datanodeip, DEFAULT_SWITCH_PORT)
 
-    if args.command == "add_rule":
+    if args.command == "add_rule" or args.command == "del_rule":
         print("Device IP: " + args.deviceip)
-        print("Input port: " + str(args.inport))
         print("Output port: " + str(args.outport))
+
+        # TODO: makes more sense to get port name, and get port nunmber from name.
 
         rule = OpenFlowRule("ip", None, args.outport)
         rule.dest_ip = args.deviceip
-        switch.add_rule(rule)
+
+        if args.command == "add_rule":
+            switch.add_rule(rule)
+        else:
+            switch.remove_rule(rule)
     else:
         switch.execute_show_command()
         switch.execute_dump_flows_command()
