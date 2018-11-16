@@ -44,7 +44,7 @@ class OpenFlowRule(object):
 
         if self.out_port is not None:
             rule_string += "actions=output:{}, ".format(self.out_port)
-        else:
+        elif self.out_port == -1:
             rule_string += "actions=drop"
 
         return rule_string + "\""
