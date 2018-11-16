@@ -4,6 +4,8 @@ import os
 import os.path
 import random
 import re
+import logging
+import sys
 from argparse import ArgumentParser
 
 import psycopg2
@@ -33,6 +35,25 @@ DATA_NODE_IMAGES_PATH = "/home/kalki/images/"
 INSTANCES_FOLDER = "instances"
 
 NUM_SEPARATOR = "-"
+
+# Global logger.
+logger = None
+
+
+def setup_custom_logger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
+                                  datefmt='%Y-%m-%d %H:%M:%S')
+    #handler = logging.FileHandler(file_path, mode='w')
+    #handler.setFormatter(formatter)
+    #logger.addHandler(handler)
+
+    screen_handler = logging.StreamHandler(stream=sys.stderr)
+    screen_handler.setFormatter(formatter)
+    logger.addHandler(screen_handler)
+    return logger
 
 
 def build_mbox_name(state_name, state_actions):
@@ -73,6 +94,7 @@ class VmUmbox(object):
         self.device_id = device_id
         self.data_bridge = data_bridge
         self.control_bridge = control_bridge
+        self.data_iface_name = ""
 
         self.image_id = None
         self.image_path = None
@@ -95,7 +117,7 @@ class VmUmbox(object):
 
         self.instance_disk_path = os.path.join(DATA_NODE_IMAGES_PATH, INSTANCES_FOLDER, self.name)
 
-        print("VM name: " + self.name)
+        logger.info("VM name: " + self.name)
 
     def store_info(self):
         """Store VM Info (at least control MAC) in DB"""
@@ -107,7 +129,7 @@ class VmUmbox(object):
         cursor.close()
         conn.close()
 
-        print "Stored umbox info in DB."
+        logger.info("Stored umbox info in DB.")
 
     def load_image_info(self):
         conn = psycopg2.connect(PG_DB_STRING)
@@ -137,12 +159,12 @@ class VmUmbox(object):
         # TODO: change this back to instance_disk_path when we are able to create it.
         xml_descriptor.set_disk_image(self.image_path, 'qcow2')
 
-        data_iface_name = UMBOX_DATA_TUN + str(self.numeric_id)
-        print 'Adding OVS connected network interface, using tap: ' + data_iface_name
-        xml_descriptor.add_bridge_interface(self.data_bridge, self.data_mac_address, target=data_iface_name, ovs=True)
+        self.data_iface_name = UMBOX_DATA_TUN + str(self.numeric_id)
+        logger.info('Adding OVS connected network interface, using tap: ' + self.data_iface_name)
+        xml_descriptor.add_bridge_interface(self.data_bridge, self.data_mac_address, target=self.data_iface_name, ovs=True)
 
         control_iface_name = UMBOX_CONTROL_TUN + str(self.numeric_id)
-        print 'Adding control plane network interface, using tap: ' + control_iface_name
+        logger.info('Adding control plane network interface, using tap: ' + control_iface_name)
         xml_descriptor.add_bridge_interface(self.control_bridge, self.control_mac_address, target=control_iface_name)
 
         # Remove seclabel item, which tends to generate issues when the VM is executed.
@@ -164,24 +186,24 @@ class VmUmbox(object):
         with open(template_xml_file, 'r') as xml_file:
             template_xml = xml_file.read().replace('\n', '')
         updated_xml = self.get_updated_descriptor(template_xml)
-        print updated_xml
+        logger.info(updated_xml)
 
         # Check if the VM is already running.
         vm = vmutils.VirtualMachine()
         try:
             # If it is, connect and destroy it, before starting a new one.
             vm.connect_to_virtual_machine_by_name(self.name)
-            print "VM with same name was already running; destroying it."
+            logger.info("VM with same name was already running; destroying it.")
             vm.destroy()
-            print "VM destroyed."
+            logger.info("VM destroyed.")
         except vmutils.VirtualMachineException, ex:
-            print "VM was not running."
+            logger.warning("VM was not running.")
             vm = vmutils.VirtualMachine()
 
         # Then create and start the VM itself.
-        print "Starting new VM."
+        logger.info("Starting new VM.")
         vm.create_and_start_vm(updated_xml)
-        print "New VM started."
+        logger.info("New VM started.")
 
     def generate_random_mac(self):
         """Generate a random mac. We are using te 00163e prefix used by Xensource."""
@@ -200,7 +222,7 @@ class VmUmbox(object):
             vm.connect_to_virtual_machine_by_name(self.name)
             vm.pause()
         except:
-            print("VM not found.")
+            logger.error("VM not found.")
 
     def unpause(self, hypervisor_host_ip):
         self._connect_to_remote_hypervisor(hypervisor_host_ip)
@@ -209,7 +231,7 @@ class VmUmbox(object):
             vm.connect_to_virtual_machine_by_name(self.name)
             vm.unpause()
         except:
-            print("VM not found.")
+            logger.error("VM not found.")
 
     def stop(self, hypervisor_host_ip):
         self._connect_to_remote_hypervisor(hypervisor_host_ip)
@@ -220,7 +242,7 @@ class VmUmbox(object):
 
             #TODO: destroy instance image file.
         except:
-            print("VM not found.")
+            logger.warning("VM not found.")
 
 
 def parse_arguments():
@@ -236,15 +258,18 @@ def parse_arguments():
 
 def main():
     args = parse_arguments()
-    print("Command: " + args.command)
-    print("Data node to use: " + args.datanodeip)
+    logger.info("Command: " + args.command)
+    logger.info("Data node to use: " + args.datanodeip)
     if args.command == "start":
-        print("Device ID: " + args.deviceid)
-        print("Image name: " + args.imagename)
+        logger.info("Device ID: " + args.deviceid)
+        logger.info("Image name: " + args.imagename)
 
-        create_and_start_umbox(args.datanodeip, args.deviceid, args.imagename)
+        umbox = create_and_start_umbox(args.datanodeip, args.deviceid, args.imagename)
+
+        # Print the TAP device name so that it can be returned and used by ovs commands if needed.
+        print(umbox.data_iface_name)
     else:
-        print("Instance: " + args.umboxname)
+        logger.info("Instance: " + args.umboxname)
 
         stop_umbox(args.datanodeip, args.umboxname)
 
