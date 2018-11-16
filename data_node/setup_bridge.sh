@@ -2,6 +2,7 @@
 
 BRIDGE_NAME=ovs-br
 BRIDGE_PORT=6653
+DB_PORT=6654
 IF_ONE=ens5
 IF_TWO=vnudata
 
@@ -34,6 +35,9 @@ setup_bridge() {
     sudo ovs-vsctl set bridge $BRIDGE_NAME protocols=OpenFlow13
     sudo ovs-vsctl set-controller $BRIDGE_NAME ptcp:$BRIDGE_PORT
     sudo ovs-vsctl set controller $BRIDGE_NAME connection-mode=out-of-band
+
+    # Configure OVS DB to listen to remote commands on given TCP port.
+    sudo ovs-appctl -t ovsdb-server ovsdb-server/add-remote pttp:$DB_PORT
 
     echo "Bridge setup complete"
 }

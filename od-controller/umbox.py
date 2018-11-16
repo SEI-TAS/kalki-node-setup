@@ -226,7 +226,7 @@ class VmUmbox(object):
 def parse_arguments():
     parser = ArgumentParser()
     parser.add_argument("-c", "--command", dest="command", required=True, help="Command: start or stop")
-    parser.add_argument("-n", "--node", dest="datanodeip", required=True, help="IP of the data node")
+    parser.add_argument("-s", "--server", dest="datanodeip", required=True, help="IP of the data node server")
     parser.add_argument("-d", "--deviceid", dest="deviceid", required=False, help="device id")
     parser.add_argument("-i", "--image", dest="imagename", required=False, help="name of the umbox image")
     parser.add_argument("-u", "--umbox", dest="umboxname", required=False, help="name of the umbox instance")

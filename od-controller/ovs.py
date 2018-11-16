@@ -8,6 +8,9 @@ DEFAULT_SWITCH_PORT = 6653
 
 DEFAULT_PRIORITY = "200"
 
+OVSDB_COMMAND_BASE = "sudo ovs-vsctl"
+OVSDB_COMMAND_SERVER = "--db=tcp:{}:{}"
+DEFAULT_OVSDB_PORT = 6654
 
 class OpenFlowRule(object):
     """Represents an OF rule."""
@@ -55,7 +58,7 @@ class RemoteVSwitch(object):
         self.server_ip = server_ip
         self.switch_port = switch_port
 
-    def send_openflow_command(self, command, arguments=""):
+    def _send_openflow_command(self, command, arguments=""):
         """Sends an OpenFlow command through ovs-ofctl to a remove ovsswitchd server."""
         try:
             server_info = OF_COMMAND_SERVER.format(self.server_ip, self.switch_port)
@@ -69,31 +72,57 @@ class RemoteVSwitch(object):
 
     def execute_show_command(self):
         """Sends the show command through OF to remote switch."""
-        return self.send_openflow_command("show")
+        return self._send_openflow_command("show")
 
     def execute_dump_flows_command(self):
         """Send the dump-flows command through OF to remote switch."""
-        return self.send_openflow_command("dump-flows")
+        return self._send_openflow_command("dump-flows")
 
     def add_rule(self, of_rule):
         """Adds a new rule/flow to the switch."""
         rule_string = of_rule.build_rule()
         print("Adding rule: " + rule_string)
-        self.send_openflow_command("add-flow", rule_string)
+        self._send_openflow_command("add-flow", rule_string)
 
     def remove_rule(self, of_rule):
         """Removes a rule/flow from the switch."""
         rule_string = of_rule.build_rule()
         print("Removing rule: " + rule_string)
-        self.send_openflow_command("del-flow", rule_string)
+        self._send_openflow_command("del-flow", rule_string)
+
+
+class RemoteOVSDB(object):
+    """Represents a remove OVS DB. Communicates to it through OpenFlow using the ovs-vsctl local command line
+    tool."""
+
+    def __init__(self, server_ip, db_port):
+        self.server_ip = server_ip
+        self.db_port = db_port
+
+    def _send_db_command(self, command, arguments=""):
+        """Sends an DB command through ovs-vsctl to a remove ovsdb server."""
+        try:
+            server_info = OVSDB_COMMAND_SERVER.format(self.server_ip, self.db_port)
+            full_command = OVSDB_COMMAND_BASE + " " + server_info + " " + command + " " + arguments
+            print("Executing DB command: " + full_command)
+            output = subprocess.check_output(shlex.split(full_command))
+            print("Output of command: " + output)
+            return output
+        except subprocess.CalledProcessError, e:
+            print("Error executing command: " + str(e))
+
+    def get_port_id(self, port_name):
+        """Gets the id of a port given its id."""
+        port_name_command = "get Interface {} ofport".format(port_name)
+        return self._send_db_command(port_name_command)
 
 
 def parse_arguments():
     parser = ArgumentParser()
     parser.add_argument("-c", "--command", dest="command", required=True, help="Command: start or stop")
-    parser.add_argument("-n", "--node", dest="datanodeip", required=True, help="IP of the data node")
+    parser.add_argument("-s", "--server", dest="datanodeip", required=True, help="IP of the data node server")
     parser.add_argument("-d", "--deviceip", dest="deviceip", required=False, help="device IP")
-    parser.add_argument("-o", "--outport", dest="outport", required=False, help="Output port on virtual switch")
+    parser.add_argument("-o", "--outport", dest="outport", required=False, help="Output port name on virtual switch")
     args = parser.parse_args()
     return args
 
@@ -106,11 +135,14 @@ def main():
 
     if args.command == "add_rule" or args.command == "del_rule":
         print("Device IP: " + args.deviceip)
-        print("Output port: " + str(args.outport))
+        print("Output port name: " + str(args.outport))
 
-        # TODO: makes more sense to get port name, and get port nunmber from name.
+        # First get port id given name.
+        ovsdb = RemoteOVSDB(args.datanodeip, DEFAULT_OVSDB_PORT)
+        port_number = ovsdb.get_port_id(str(args.outport))
+        print("Output port number for {} is {}".format(args.outport, port_number))
 
-        rule = OpenFlowRule("ip", None, args.outport)
+        rule = OpenFlowRule("ip", None, port_number)
         rule.dest_ip = args.deviceip
 
         if args.command == "add_rule":
