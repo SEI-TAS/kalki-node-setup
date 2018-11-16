@@ -45,7 +45,7 @@ class VirtualMachine(object):
     def connect_to_hypervisor(is_system_level=True, host_name='', transport=None):
         try:
             uri = VirtualMachine._get_qemu_libvirt_connection_uri(is_system_level, host_name=host_name, transport=transport)
-            print uri
+            #print uri
             hypervisor = libvirt.open(uri)
             return hypervisor
         except libvirt.libvirtError, e:
