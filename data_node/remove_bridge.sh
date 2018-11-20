@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sudo ovs-vsctl del-br br0
+sudo ovs-vsctl del-br ovs-br
