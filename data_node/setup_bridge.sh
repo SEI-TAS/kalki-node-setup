@@ -10,15 +10,16 @@ IF_TWO=vnudata
 #CONTROLLER_PORT=6653
 
 connect_interface() {
-    local interface="$1"
+    local port_name="$1"
     local port_num="$2"
+    local interface="$1"
 
     # Huh?
     sudo ethtool -K $interface gro off
 
-    # Add the given interface as a port to the bridge, and assign it the given OpenFlow port number.
-    sudo ovs-vsctl --may-exist add-port $BRIDGE_NAME $interface -- set Interface $interface ofport_request=$port_num
-    sudo ovs-ofctl mod-port $BRIDGE_NAME $interface up
+    # Add the given port_name as a port to the bridge, and assign it the given OpenFlow port number.
+    sudo ovs-vsctl --may-exist add-port $BRIDGE_NAME $port_name -- set interface $port_name ofport_request=$port_num -- set interface $port_name type=internal
+    sudo ovs-ofctl mod-port $BRIDGE_NAME $port_name up
 }
 
 setup_bridge() {
