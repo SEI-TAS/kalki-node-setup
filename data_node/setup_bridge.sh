@@ -76,7 +76,7 @@ setup_ovs_bridge() {
     sudo ovs-vsctl set controller $bridge_name connection-mode=out-of-band
 
     # Configure OVS DB to listen to remote commands on given TCP port.
-    sudo ovs-appctl -t ovsdb-server ovsdb-server/add-remote pttp:$OVS_DB_PORT
+    sudo ovs-appctl -t ovsdb-server ovsdb-server/add-remote ptcp:$OVS_DB_PORT
 
     echo "Bridge setup complete"
 }
