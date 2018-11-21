@@ -44,7 +44,8 @@ setup_nic_bridge() {
     local nic_ip="$7"
 
     echo "Setting up NIC OVS bridge $bridge_name"
-    sudo ovs-vsctl add-br $bridge_name protocols=OpenFlow13
+    sudo ovs-vsctl add-br $bridge_name
+    sudo ovs-vsctl set bridge $bridge_name protocols=OpenFlow13
 
     # Connect to NIC to the OVS switch in port 1.
     sudo ethtool -K $nic_name gro off
