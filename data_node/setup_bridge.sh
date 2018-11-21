@@ -6,9 +6,11 @@ OVS_DB_PORT=6654
 
 IOT_BRIDGE=ovs-iot
 IOT_NIC=ens5
+IOT_NIC_IP=192.168.57.102
 
 EXT_BRIDGE=ovs-ext
 EXT_NIC=ens6
+EXT_NIC_IP=192.168.56.102
 
 connect_interface() {
     local bridge_name="$1"
@@ -39,14 +41,17 @@ setup_nic_bridge() {
     local patch_peer_name="$4"
     local of_bridge_name="$5"
     local of_patch_port_num="$6"
+    local nic_ip="$7"
 
     echo "Setting up NIC OVS bridge $bridge_name"
     sudo ovs-vsctl add-br $bridge_name
-    sudo ip link set $bridge_name up
 
     # Connect to NIC to the OVS switch in port 1.
     sudo ethtool -K $nic_name gro off
     connect_interface $bridge_name $nic_name 1
+    sudo ip addr flush dev $nic_name
+    sudo ip addr add $nic_ip/24 dev $bridge_name
+    sudo ip link set $bridge_name up
 
     # Set up patch port to main OVS switch in port 2.
     connect_patch_port $bridge_name $patch_port_name 2 $patch_peer_name
@@ -82,7 +87,7 @@ ext_to_of_patch="ext-to-of"
 of_to_ext_patch="of-to-ext"
 
 setup_ovs_bridge $OF_BRIDGE
-setup_nic_bridge $IOT_BRIDGE $IOT_NIC $iot_to_of_patch $of_to_iot_patch $OF_BRIDGE 1
-setup_nic_bridge $EXT_BRIDGE $EXT_NIC $ext_to_of_patch $of_to_ext_patch $OF_BRIDGE 2
+setup_nic_bridge $IOT_BRIDGE $IOT_NIC $iot_to_of_patch $of_to_iot_patch $OF_BRIDGE 1 $IOT_NIC_IP
+setup_nic_bridge $EXT_BRIDGE $EXT_NIC $ext_to_of_patch $of_to_ext_patch $OF_BRIDGE 2 $EXT_NIC_IP
 
 echo "OVS switches ready"
