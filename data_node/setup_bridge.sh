@@ -24,12 +24,19 @@ connect_patch_port() {
     local bridge_name="$1"
     local patch_port_name="$2"
     local port_num="$3"
-    local peer_name="$4"
 
     sudo ovs-vsctl add-port $bridge_name $patch_port_name -- set interface $patch_port_name ofport_request=$port_num
     sudo ovs-vsctl set interface $patch_port_name type=patch
-    sudo ovs-vsctl set interface $patch_port_name options:peer=$peer_name
 }
+
+connect_patch_port_peers() {
+    local peer1="$1"
+    local peer2="$2"
+
+    sudo ovs-vsctl set interface $peer1 options:peer=$peer2
+    sudo ovs-vsctl set interface $peer2 options:peer=$peer1
+}
+
 
 setup_nic_bridge() {
     local bridge_name="$1"
@@ -48,8 +55,9 @@ setup_nic_bridge() {
     connect_interface $bridge_name $nic_name 1
 
     # Set up patch port to main OVS switch in port 2.
-    connect_patch_port $bridge_name $patch_port_name 2 $patch_peer_name
-    connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num $patch_port_name
+    connect_patch_port $bridge_name $patch_port_name 2
+    connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num
+    connect_patch_port_peers $patch_port_name $patch_peer_name
 
     echo "Bridge setup complete"
 }
