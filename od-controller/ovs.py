@@ -142,6 +142,10 @@ def main():
         port_number = ovsdb.get_port_id(str(args.outport))
         print("Output port number for {} is {}".format(args.outport, port_number))
 
+        if port_number is None:
+            print("Unable to obtain port number; aborting.")
+            exit(1)
+
         rule = OpenFlowRule("ip", None, port_number)
         rule.dest_ip = args.deviceip
 
