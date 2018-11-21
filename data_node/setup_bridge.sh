@@ -51,7 +51,7 @@ setup_nic_bridge() {
     connect_patch_port $bridge_name $patch_port_name 2 $patch_peer_name
     connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num $patch_port_name
 
-    echo "Bridge setup complete"    
+    echo "Bridge setup complete"
 }
 
 setup_ovs_bridge() {
@@ -80,8 +80,8 @@ of_to_iot_patch="$OF_BRIDGE-to-$IOT_BRIDGE"
 ext_to_of_patch="$EXT_BRIDGE-to-$OF_BRIDGE"
 of_to_ext_patch="$OF_BRIDGE-to-$EXT_BRIDGE"
 
-setup_ovs_bridge OF_BRIDGE
-setup_nic_bridge IOT_BRIDGE, IOT_NIC, iot_to_of_patch, of_to_iot_patch, $OF_BRIDGE, 1
-setup_nic_bridge EXT_BRIDGE, EXT_NIC, ext_to_of_patch, of_to_ext_patch, $OF_BRIDGE, 2
+setup_ovs_bridge $OF_BRIDGE
+setup_nic_bridge $IOT_BRIDGE, $IOT_NIC, $iot_to_of_patch, $of_to_iot_patch, $OF_BRIDGE, 1
+setup_nic_bridge $EXT_BRIDGE, $EXT_NIC, $ext_to_of_patch, $of_to_ext_patch, $OF_BRIDGE, 2
 
 echo "OVS switches ready"
