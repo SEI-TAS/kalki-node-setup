@@ -81,7 +81,7 @@ ext_to_of_patch="$EXT_BRIDGE-to-$OF_BRIDGE"
 of_to_ext_patch="$OF_BRIDGE-to-$EXT_BRIDGE"
 
 setup_ovs_bridge $OF_BRIDGE
-setup_nic_bridge $IOT_BRIDGE, $IOT_NIC, $iot_to_of_patch, $of_to_iot_patch, $OF_BRIDGE, 1
-setup_nic_bridge $EXT_BRIDGE, $EXT_NIC, $ext_to_of_patch, $of_to_ext_patch, $OF_BRIDGE, 2
+setup_nic_bridge $IOT_BRIDGE $IOT_NIC $iot_to_of_patch $of_to_iot_patch $OF_BRIDGE 1
+setup_nic_bridge $EXT_BRIDGE $EXT_NIC $ext_to_of_patch $of_to_ext_patch $OF_BRIDGE 2
 
 echo "OVS switches ready"
