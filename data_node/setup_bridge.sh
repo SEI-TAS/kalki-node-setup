@@ -63,7 +63,7 @@ setup_nic_bridge() {
     echo "Bridge setup complete"
 }
 
-setup_ovs_bridge() {
+setup_of_bridge() {
     local bridge_name="$1"
     # Create and start up the OVS switch.
     echo "Setting up OpenFlow enabled OVS bridge..."
@@ -81,6 +81,14 @@ setup_ovs_bridge() {
     echo "Bridge setup complete"
 }
 
+setup_passthrough_bridge_rules() {
+    local bridge_name="$1"
+
+    # Set up default rules to connect bridges together.
+    sudo ovs-ofctl add-flow $bridge_name "in_port=1,priority=50,actions=output:2"
+    sudo ovs-ofctl add-flow $bridge_name "in_port=2,priority=50,actions=output:1"
+}
+
 # Setup
 echo "Beginning switches setup..."
 
@@ -89,8 +97,12 @@ of_to_iot_patch="of-to-iot"
 ext_to_of_patch="ext-to-of"
 of_to_ext_patch="of-to-ext"
 
-setup_ovs_bridge $OF_BRIDGE
+setup_of_bridge $OF_BRIDGE
 setup_nic_bridge $IOT_BRIDGE $IOT_NIC $iot_to_of_patch $of_to_iot_patch $OF_BRIDGE 1 $IOT_NIC_IP
 setup_nic_bridge $EXT_BRIDGE $EXT_NIC $ext_to_of_patch $of_to_ext_patch $OF_BRIDGE 2 $EXT_NIC_IP
+
+setup_passthrough_bridge_rules $OF_BRIDGE
+setup_passthrough_bridge_rules $IOT_BRIDGE
+setup_passthrough_bridge_rules $EXT_BRIDGE
 
 echo "OVS switches ready"
