@@ -57,6 +57,9 @@ setup_nic_bridge() {
     connect_patch_port $bridge_name $patch_port_name 2 $patch_peer_name
     connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num $patch_port_name
 
+    # Set this to work as a regular switch/bridge.
+    sudo ovs-ofctl add-flow $bridge_name action=NORMAL
+
     echo "Bridge setup complete"
 }
 
