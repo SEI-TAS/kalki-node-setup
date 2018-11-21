@@ -44,7 +44,7 @@ setup_nic_bridge() {
     local nic_ip="$7"
 
     echo "Setting up NIC OVS bridge $bridge_name"
-    sudo ovs-vsctl add-br $bridge_name
+    sudo ovs-vsctl add-br $bridge_name protocols=OpenFlow13
 
     # Connect to NIC to the OVS switch in port 1.
     sudo ethtool -K $nic_name gro off
@@ -58,7 +58,7 @@ setup_nic_bridge() {
     connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num $patch_port_name
 
     # Set this to work as a regular switch/bridge.
-    sudo ovs-ofctl add-flow $bridge_name action=NORMAL
+    sudo ovs-ofctl add-flow -O OpenFlow13 $bridge_name action=NORMAL
 
     echo "Bridge setup complete"
 }
@@ -85,8 +85,8 @@ setup_passthrough_bridge_rules() {
     local bridge_name="$1"
 
     # Set up default rules to connect bridges together.
-    sudo ovs-ofctl add-flow $bridge_name "in_port=1,priority=50,actions=output:2"
-    sudo ovs-ofctl add-flow $bridge_name "in_port=2,priority=50,actions=output:1"
+    sudo ovs-ofctl add-flow -O OpenFlow13 $bridge_name "in_port=1,priority=50,actions=output:2"
+    sudo ovs-ofctl add-flow -O OpenFlow13 $bridge_name "in_port=2,priority=50,actions=output:1"
 }
 
 # Setup
