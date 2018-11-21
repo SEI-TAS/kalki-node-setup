@@ -24,19 +24,11 @@ connect_patch_port() {
     local bridge_name="$1"
     local patch_port_name="$2"
     local port_num="$3"
+    local peer_port_name="$4"
 
     sudo ovs-vsctl add-port $bridge_name $patch_port_name -- set interface $patch_port_name ofport_request=$port_num
-    sudo ovs-vsctl set interface $patch_port_name type=patch
+    sudo ovs-vsctl set interface $patch_port_name type=patch options:peer=$peer_port_name
 }
-
-connect_patch_port_peers() {
-    local peer1="$1"
-    local peer2="$2"
-
-    sudo ovs-vsctl set interface $peer1 options:peer=$peer2
-    sudo ovs-vsctl set interface $peer2 options:peer=$peer1
-}
-
 
 setup_nic_bridge() {
     local bridge_name="$1"
@@ -56,8 +48,7 @@ setup_nic_bridge() {
 
     # Set up patch port to main OVS switch in port 2.
     connect_patch_port $bridge_name $patch_port_name 2
-    connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num
-    connect_patch_port_peers $patch_port_name $patch_peer_name
+    connect_patch_port $of_bridge_name $patch_peer_name $of_patch_port_num $patch_peer_name
 
     echo "Bridge setup complete"
 }
@@ -83,10 +74,10 @@ setup_ovs_bridge() {
 # Setup
 echo "Beginning switches setup..."
 
-iot_to_of_patch="$IOT_BRIDGE-to-$OF_BRIDGE"
-of_to_iot_patch="$OF_BRIDGE-to-$IOT_BRIDGE"
-ext_to_of_patch="$EXT_BRIDGE-to-$OF_BRIDGE"
-of_to_ext_patch="$OF_BRIDGE-to-$EXT_BRIDGE"
+iot_to_of_patch="iot-to-of"
+of_to_iot_patch="of-to-iot"
+ext_to_of_patch="ext-to-of"
+of_to_ext_patch="of-to-ext"
 
 setup_ovs_bridge $OF_BRIDGE
 setup_nic_bridge $IOT_BRIDGE $IOT_NIC $iot_to_of_patch $of_to_iot_patch $OF_BRIDGE 1
