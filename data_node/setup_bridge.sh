@@ -26,8 +26,10 @@ connect_patch_port() {
     local port_num="$3"
     local peer_port_name="$4"
 
-    sudo ovs-vsctl add-port $bridge_name $patch_port_name -- set interface $patch_port_name ofport_request=$port_num
-    sudo ovs-vsctl set interface $patch_port_name type=patch options:peer=$peer_port_name
+    sudo ovs-vsctl \
+                -- add-port $bridge_name $patch_port_name \
+                -- set interface $patch_port_name ofport_request=$port_num \
+                -- set interface $patch_port_name type=patch options:peer=$peer_port_name
 }
 
 setup_nic_bridge() {
