@@ -5,12 +5,12 @@ OF_BRIDGE_PORT=6653
 OVS_DB_PORT=6654
 
 IOT_BRIDGE=ovs-iot
-IOT_NIC=ens5
-IOT_NIC_IP=192.168.57.102
+IOT_NIC=ens6
+IOT_NIC_IP=192.168.56.102
 
 EXT_BRIDGE=ovs-ext
-EXT_NIC=ens6
-EXT_NIC_IP=192.168.56.102
+EXT_NIC=ens5
+EXT_NIC_IP=192.168.57.102
 
 connect_interface() {
     local bridge_name="$1"
