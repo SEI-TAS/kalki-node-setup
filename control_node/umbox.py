@@ -72,7 +72,7 @@ def create_and_start_umbox(data_node_ip, device_id, image_name,
     #umbox.create_linked_image()
     umbox.start(data_node_ip)
     umbox.store_info()
-    print("Umbox started.")
+    logger.info("Umbox started.")
 
     return umbox
 
@@ -81,7 +81,7 @@ def stop_umbox(data_node_ip, instance_name):
     """Stops a running instance of an umbox."""
     umbox = VmUmbox(instance_name)
     umbox.stop(data_node_ip)
-    print("Umbox stopped.")
+    logger.info("Umbox stopped.")
 
     # TODO: mark instance as stopped in DB, or delete it.
 
