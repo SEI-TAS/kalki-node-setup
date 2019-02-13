@@ -18,6 +18,9 @@ connect_interface() {
     # Add the given port_name as a port to the bridge, and assign it the given OpenFlow port number.
     sudo ovs-vsctl add-port $bridge_name $interface -- set interface $interface ofport_request=$port_num
     sudo ovs-ofctl mod-port $bridge_name $interface up
+
+    # Remove the IP address from the NIC since it no longer makes sense.
+    sudo ip addr flush dev $interface
 }
 
 setup_nic_bridge() {
@@ -30,15 +33,12 @@ setup_nic_bridge() {
 
     # Connect to NIC to the OVS switch in port 1.
     connect_interface $bridge_name $nic1_name 1
-    sudo ip addr flush dev $nic1_name
 
     # Connect to NIC to the OVS switch in port 1.
     connect_interface $bridge_name $nic2_name 2
-    sudo ip addr flush dev $nic2_name
 
+    echo "Setting up OF params"
     sudo ip link set $bridge_name up
-
-    echo "Setting up OF version"
     sudo ovs-vsctl set bridge $bridge_name protocols=OpenFlow13
     sudo ovs-vsctl set-controller $bridge_name ptcp:$OF_BRIDGE_PORT
     sudo ovs-vsctl set controller $bridge_name connection-mode=out-of-band
@@ -53,8 +53,11 @@ setup_passthrough_bridge_rules() {
     local bridge_name="$1"
 
     # Set up default rules to connect bridges together.
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "in_port=1,priority=50,actions=output:2"
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "in_port=2,priority=50,actions=output:1"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=100,dhcp,actions=normal"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=50,in_port=1,actions=output:2"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=50,in_port=2,actions=output:1"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=0,actions=normal"
+
 }
 
 # Setup

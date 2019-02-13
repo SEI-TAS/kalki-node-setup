@@ -121,10 +121,31 @@ def parse_arguments():
     parser = ArgumentParser()
     parser.add_argument("-c", "--command", dest="command", required=True, help="Command: start or stop")
     parser.add_argument("-s", "--server", dest="datanodeip", required=True, help="IP of the data node server")
-    parser.add_argument("-d", "--deviceip", dest="deviceip", required=False, help="device IP")
-    parser.add_argument("-o", "--outport", dest="outport", required=False, help="Output port name on virtual switch")
+    parser.add_argument("-si", "--sourceip", dest="sourceip", required=False, help="Source IP")
+    parser.add_argument("-di", "--destip", dest="destip", required=False, help="Destination IP")
+    parser.add_argument("-i", "--inport", dest="inport", required=False, help="Input port name/number on virtual switch")
+    parser.add_argument("-o", "--outport", dest="outport", required=False, help="Output port name/number on virtual switch")
+    parser.add_argument("-p", "--priority", dest="priority", required=False, help="Priority")
     args = parser.parse_args()
     return args
+
+
+def get_port_number(ovsdbip, port_name):
+    if port_name is None:
+        return None
+
+    try:
+        port_number = int(port_name)
+        return port_number
+    except ValueError:
+        ovsdb = RemoteOVSDB(ovsdbip, DEFAULT_OVSDB_PORT)
+        port_number = ovsdb.get_port_id(str(port_name))
+        if port_number is None:
+            print("Unable to obtain port number for {}; aborting.".format(port_name))
+            exit(1)
+
+        print("Port number for {} is {}".format(port_name, port_number))
+        return port_number
 
 
 def main():
@@ -134,20 +155,22 @@ def main():
     switch = RemoteVSwitch(args.datanodeip, DEFAULT_SWITCH_PORT)
 
     if args.command == "add_rule" or args.command == "del_rule":
-        print("Device IP: " + args.deviceip)
+        print("Source IP: " + args.sourceip)
+        print("Destination IP: " + args.destip)
+        print("Input port name: " + str(args.inport))
         print("Output port name: " + str(args.outport))
+        print("Priority: " + args.priority)
 
-        # First get port id given name.
-        ovsdb = RemoteOVSDB(args.datanodeip, DEFAULT_OVSDB_PORT)
-        port_number = ovsdb.get_port_id(str(args.outport))
-        print("Output port number for {} is {}".format(args.outport, port_number))
+        # First get port numbers if needed.
+        in_port_number = get_port_number(args.datanodeip, args.inport)
+        out_port_number = get_port_number(args.datanodeip, args.outport)
 
-        if port_number is None:
-            print("Unable to obtain port number; aborting.")
-            exit(1)
-
-        rule = OpenFlowRule("ip", None, port_number)
-        rule.dest_ip = args.deviceip
+        # Set up rule with received IPs and OVS ports.
+        rule = OpenFlowRule("ip", in_port_number, out_port_number)
+        rule.src_ip = args.sourceip
+        rule.dest_ip = args.destip
+        if args.priority is not None:
+            rule.priority = args.priority
 
         if args.command == "add_rule":
             switch.add_rule(rule)
