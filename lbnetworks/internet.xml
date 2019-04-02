@@ -1,7 +1,8 @@
 <network>
-  <name>internet</name>
-  <forward mode='nat'/>
-  <bridge name='virbr57'/>
-  <ip address='192.168.57.1' netmask='255.255.255.0'>
-  </ip>
+    <name>internet</name>
+    <forward mode='nat'/>
+    <bridge name='virbr57'/>
+    <ip address='192.168.57.1' netmask='255.255.255.0'>
+    </ip>
+    <route address="192.168.56.0" prefix="24" gateway="192.168.57.102"/>
 </network>

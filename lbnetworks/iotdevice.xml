@@ -8,4 +8,5 @@
       <range start="192.168.56.110" end="192.168.56.254" />
     </dhcp>
   </ip>
+  <route address="192.168.57.0" prefix="24" gateway="192.168.56.102"/>
 </network>
