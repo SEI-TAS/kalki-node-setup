@@ -1,12 +1,11 @@
 
 <network>
   <name>iotdevice</name>
-  <forward mode='nat'/>
+  <forward mode='route'/>
   <bridge name='virbr56'/>
   <ip address='192.168.56.1' netmask='255.255.255.0'>
     <dhcp>
       <range start="192.168.56.110" end="192.168.56.254" />
     </dhcp>
   </ip>
-  <route address="192.168.57.0" prefix="24" gateway="192.168.56.102"/>
 </network>
