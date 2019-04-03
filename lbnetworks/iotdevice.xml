@@ -1,6 +1,5 @@
 <network>
     <name>iotdevice</name>
-    <forward mode="route"/>
     <bridge name="virbr56"/>
     <ip address="192.168.56.1" netmask="255.255.255.0">
         <dhcp>
