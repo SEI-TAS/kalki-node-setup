@@ -53,7 +53,6 @@ setup_passthrough_bridge_rules() {
     local bridge_name="$1"
 
     # Set up default rules to connect bridges together.
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=100,dhcp,actions=normal"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=50,in_port=1,actions=output:2"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=50,in_port=2,actions=output:1"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=0,actions=normal"
