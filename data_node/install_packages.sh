@@ -41,6 +41,8 @@ install_ovs() {
 # Install packages
 echo "Beginning packages setup..."
 update
+install_python
+install_libvirt
 install_qemu
 install_ovs
 echo "Finished setting up packages"
