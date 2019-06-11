@@ -6,6 +6,12 @@ update() {
     echo "Update complete"
 }
 
+install_git() {
+    echo "Installing Git..."
+    sudo apt-get -yqq install git
+    echo "Git Install Complete"
+}
+
 
 install_python() {
     echo "Installing Python..."
@@ -26,6 +32,11 @@ install_ovs_tools() {
     echo "OVS Install Complete"
 }
 
+install_java() {
+    echo "Installing Java OpenJDK..."
+    sudo apt-get -yqq install openjdk-8-jdk
+    echo "Java OpenJDK Install Complete"
+}
 
 install_postgres() {
     echo "Installing postgresql..."
@@ -38,9 +49,11 @@ install_postgres() {
 # Install packages
 echo "Beginning packages setup..."
 update
+install_git
 install_python
 install_libvirt
 install_ovs_tools
+install_java
 install_postgres
 echo "Finished setting up packages"
 

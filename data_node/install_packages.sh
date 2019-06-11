@@ -9,6 +9,7 @@ update() {
 install_python() {
     echo "Installing Python..."
     sudo apt-get -yqq install python python-pip
+    sudo pip install pipenv
     echo "Python Install Complete"
 }
 
