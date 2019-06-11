@@ -12,13 +12,6 @@ install_python() {
     echo "Python Install Complete"
 }
 
-install_libvirt() {
-    echo "Installing Libvirt..."
-    sudo apt-get -yqq install libvirt-dev
-    sudo pip install libvirt-python
-    echo "Libvirt Install Complete"
-}
-
 # Note that for the libvirt-bin daemon to actually listen to incoming connections, the following config changes are needed:
 # - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tcp = 1
 # - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tls = 0
@@ -42,7 +35,6 @@ install_ovs() {
 echo "Beginning packages setup..."
 update
 install_python
-install_libvirt
 install_qemu
 install_ovs
 echo "Finished setting up packages"
