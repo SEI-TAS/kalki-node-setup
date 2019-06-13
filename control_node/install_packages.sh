@@ -38,6 +38,13 @@ install_java() {
     echo "Java OpenJDK Install Complete"
 }
 
+install_docker() {
+    echo "Installing Docker.."
+    sudo apt-get -yqq install docker.io
+    sudo usermod -a -G docker $USER
+    echo "Docker Install Complete"
+}
+
 install_postgres() {
     echo "Installing postgresql..."
     sudo apt-get install postgresql postgresql-contrib
@@ -50,11 +57,12 @@ install_postgres() {
 echo "Beginning packages setup..."
 update
 install_git
-install_python
-install_libvirt
-install_ovs_tools
 install_java
-install_postgres
+install_docker
+#install_python
+#install_libvirt
+#install_ovs_tools
+#install_postgres
 echo "Finished setting up packages"
 
 # Also needed for network simple config:
