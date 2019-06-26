@@ -25,11 +25,19 @@ install_ovs() {
     echo "OVS Install Complete"
 }
 
+install_docker() {
+    echo "Installing Docker.."
+    sudo apt-get -yqq install docker.io
+    sudo usermod -a -G docker $USER
+    echo "Docker Install Complete"
+}
+
 # Install packages
 echo "Beginning packages setup..."
 update
 install_qemu
 install_ovs
+install_docker
 echo "Finished setting up packages"
 
 # To enable nested VMs, if needed: http://www.server-world.info/en/note?os=Ubuntu_16.04&p=kvm&f=8
