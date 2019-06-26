@@ -13,8 +13,8 @@ update() {
 # - /etc/default/libvirt-bin: set libvirtd_opts to "--listen" , and uncomment.
 install_qemu() {
     echo "Installing Qemu and Libvirt Daemon..."
-    sudo apt-get -yqq install qemu-system-x86_64 libvirt-bin
-    echo "Python Install Complete"
+    sudo apt-get -yqq install qemu-system libvirt-bin
+    echo "Qemu and Libvirt Install Complete"
 }
 
 install_ovs() {
