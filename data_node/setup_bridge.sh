@@ -7,6 +7,17 @@ OVS_DB_PORT=6654
 IOT_NIC=ens6
 EXT_NIC=ens5
 
+clear_bridge() {
+    echo "Removing bridge in case it existed already."
+    sudo ovs-vsctl del-br $OF_BRIDGE
+
+    echo "Restarting bridged ifaces."
+    sudo ifdown $EXT_NIC
+    sudo ifup $EXT_NIC
+    sudo ifdown $IOT_NIC
+    sudo ifup $IOT_NIC
+}
+
 connect_interface() {
     local bridge_name="$1"
     local interface="$2"
@@ -62,6 +73,7 @@ setup_passthrough_bridge_rules() {
 # Setup
 echo "Beginning switches setup..."
 
+clear_bridge
 setup_nic_bridge $OF_BRIDGE $IOT_NIC $EXT_NIC
 setup_passthrough_bridge_rules $OF_BRIDGE
 
