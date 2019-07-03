@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-IOT_NIC=ens6
-EXT_NIC=ens5
+IOT_NIC=enp2s0f0
+EXT_NIC=enp2s0f1
 
 sudo ovs-vsctl del-br ovs-br
 sudo ovs-vsctl del-br ovs-iot

@@ -4,8 +4,8 @@ OF_BRIDGE=ovs-br
 OF_BRIDGE_PORT=6653
 OVS_DB_PORT=6654
 
-IOT_NIC=ens6
-EXT_NIC=ens5
+IOT_NIC=enp2s0f0
+EXT_NIC=enp2s0f1
 
 clear_bridge() {
     echo "Removing bridge in case it existed already."
