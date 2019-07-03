@@ -17,6 +17,13 @@ install_qemu() {
     echo "Qemu and Libvirt Install Complete"
 }
 
+install_python() {
+    echo "Installing Python..."
+    sudo apt-get -yqq install python python-pip
+    sudo python -m pip install pipenv
+    echo "Python Install Complete"
+}
+
 install_ovs() {
     echo "Installing OVS..."
     sudo apt-get -yqq install openvswitch-common openvswitch-switch openvswitch-dbg ethtool
@@ -37,7 +44,7 @@ echo "Beginning packages setup..."
 update
 install_qemu
 install_ovs
-install_docker
+install_python
 echo "Finished setting up packages"
 
 # To enable nested VMs, if needed: http://www.server-world.info/en/note?os=Ubuntu_16.04&p=kvm&f=8
