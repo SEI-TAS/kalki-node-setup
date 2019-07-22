@@ -10,7 +10,7 @@ update() {
 # - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tcp = 1
 # - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tls = 0
 # - /etc/libvirt/libvirtd.conf: uncomment the line and change to #auth_tcp = "none"
-# - /etc/default/libvirt-bin: set libvirtd_opts to "--listen" , and uncomment.
+# - /etc/default/libvirt-bin or /etc/default/libvirtd: set libvirtd_opts to "--listen" , and uncomment.
 install_qemu() {
     echo "Installing Qemu and Libvirt Daemon..."
     sudo apt-get -yqq install qemu-system libvirt-bin
