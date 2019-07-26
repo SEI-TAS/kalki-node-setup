@@ -4,6 +4,8 @@ OF_BRIDGE=ovs-br
 OF_BRIDGE_PORT=6653
 OVS_DB_PORT=6654
 
+IOT_NIC_IP=10.27.151.127
+
 IOT_NIC=enp2s0f1
 EXT_NIC=enp2s0f0
 
@@ -57,11 +59,17 @@ setup_nic_bridge() {
     # Configure OVS DB to listen to remote commands on given TCP port.
     sudo ovs-appctl -t ovsdb-server ovsdb-server/add-remote ptcp:$OVS_DB_PORT
 
+    sudo ip addr add ${IOT_NIC_IP}/24 dev $bridge_name
+
     echo "Bridge setup complete"
 }
 
 setup_passthrough_bridge_rules() {
     local bridge_name="$1"
+
+    # Set rules to be able to process requests and responses to our own IP.
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip_src=$IOT_NIC_IP,actions=normal"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip_dst=$IOT_NIC_IP,actions=normal"
 
     # Set up default rules to connect bridges together.
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=50,in_port=1,actions=output:2"

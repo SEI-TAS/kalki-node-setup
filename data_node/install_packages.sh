@@ -14,6 +14,7 @@ update() {
 install_qemu() {
     echo "Installing Qemu and Libvirt Daemon..."
     sudo apt-get -yqq install qemu-system libvirt-bin
+    sudo usermod -a -G kvm $USER
     echo "Qemu and Libvirt Install Complete"
 }
 

@@ -11,3 +11,5 @@ sudo ifdown $EXT_NIC
 sudo ifup $EXT_NIC
 sudo ifdown $IOT_NIC
 sudo ifup $IOT_NIC
+
+sudo bash /opt/netplan-config/bin/netplan-config kalki
