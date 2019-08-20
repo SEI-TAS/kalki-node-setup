@@ -1,0 +1,10 @@
+[Unit]
+Description=OVS Setup service
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+ExecStart=/home/local/SSDLAB/secheverria/kalki/kalki-node-setup/data_node/setup_bridge.sh
+
+[Install]
+WantedBy=multi-user.target
