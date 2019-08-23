@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file="/netplan_configs/$1-config.yaml"
+file="$1-config.yaml"
 
 cp $file /etc/netplan/01-config.yaml
 netplan apply
