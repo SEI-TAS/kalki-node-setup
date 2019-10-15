@@ -1,0 +1,1 @@
+Acquire::http::proxy "http://proxy.sei.cmu.edu:8080";
