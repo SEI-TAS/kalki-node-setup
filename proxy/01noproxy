@@ -1,0 +1,2 @@
+Acquire::http::proxy "false";
+Acquire::https::proxy "false";

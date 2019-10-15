@@ -6,6 +6,7 @@ export HTTP_PROXY=''
 export HTTPS_PROXY=''
 
 sudo rm /etc/apt/apt.conf.d/01proxy
+sudo cp 01noproxy /etc/apt/apt.conf.d/
 
 cd docker
 bash docker_removal.sh
