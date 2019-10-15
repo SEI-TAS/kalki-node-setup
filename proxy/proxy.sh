@@ -10,8 +10,8 @@ sudo rm /etc/apt/apt.conf.d/01noproxy
 sudo cp 01proxy /etc/apt/apt.conf.d/
 
 cd docker
-bash docker_setup.sh
+bash docker_proxy.sh
 
 cd ..
 cd gradle
-bash gradle_setup.sh
+bash gradle_proxy.sh
