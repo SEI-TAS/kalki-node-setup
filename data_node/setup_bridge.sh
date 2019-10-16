@@ -71,10 +71,13 @@ setup_passthrough_bridge_rules() {
     local bridge_name="$1"
 
     # Set rules to be able to process requests and responses to our own IP.
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,arp,nw_src=${IOT_NIC_IP},actions=normal"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,arp,nw_src=${IOT_NIC_IP},actions=output:1"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,arp,in_port=1,nw_dst=${IOT_NIC_IP},actions=normal"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,ip_src=${IOT_NIC_IP},actions=normal"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,in_port=1,ip_dst=${IOT_NIC_IP},actions=normal"
+
+    # Rule to drop mDNS requests.
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,ip_src=${IOT_NIC_IP},udp_dst=5353,actions=drop"
 
     # Set up default rules to connect bridges together.
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=50,in_port=1,actions=output:2"
