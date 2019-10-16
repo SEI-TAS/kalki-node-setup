@@ -71,7 +71,7 @@ setup_passthrough_bridge_rules() {
     local bridge_name="$1"
 
     # Rule to drop mDNS requests and IPv6 traffic.
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=160,ip,ip_src=${IOT_NIC_IP},ip_proto=17,udp_dst=5353,actions=drop"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=160,udp,ip_src=${IOT_NIC_IP},tp_dst=5353,actions=drop"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=160,ipv6,actions=drop"
 
     # Set rules to be able to process requests and responses to our own IP.
