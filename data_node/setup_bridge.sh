@@ -77,7 +77,7 @@ setup_passthrough_bridge_rules() {
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,in_port=1,ip_dst=${IOT_NIC_IP},actions=normal"
 
     # Rule to drop mDNS requests and IPv6 traffic.
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,ip_src=${IOT_NIC_IP},nw_protocol=17,actions=drop"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,ip_src=${IOT_NIC_IP},tp_dst=5353,actions=drop"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ipv6,actions=drop"
 
     # Set up default rules to connect bridges together.
