@@ -77,9 +77,9 @@ setup_passthrough_bridge_rules() {
     # Set rules to be able to process requests and responses to our own IP.
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,arp,nw_src=${IOT_NIC_IP},actions=output:1"
     sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,arp,in_port=1,nw_dst=${IOT_NIC_IP},actions=normal"
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=99,ip,ip_src=${IOT_NIC_IP},actions=normal"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,ip_src=${IOT_NIC_IP},actions=normal"
     #sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=99,ip,in_port=1,ip_dst=${IOT_NIC_IP},actions=normal,mod_nw_dst:10.27.152.5,output:2"
-    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=99,ip,in_port=1,ip_dst=${IOT_NIC_IP},actions=normal"
+    sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=150,ip,in_port=1,ip_dst=${IOT_NIC_IP},actions=normal"
 
     # Set up default rules to connect bridges together.
     #sudo ovs-ofctl -O OpenFlow13 add-flow $bridge_name "priority=60,in_port=2,ip,ip_src=10.27.152.0/24,actions=mod_nw_src:${IOT_NIC_IP},output:1"
