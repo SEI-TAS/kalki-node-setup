@@ -1,0 +1,19 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s31f6:
+      dhcp4: false
+      #addresses: [10.27.153.2/24]
+    enp2s0f1:
+      dhcp4: false
+      addresses: [10.27.151.127/24]
+    enp2s0f0:
+      dhcp4: false
+      addresses: [10.27.152.6/24]
+  bridges:
+    br-control:
+      interfaces: [enp0s31f6]
+      dhcp4: false
+      addresses: [10.27.153.2/24]
+

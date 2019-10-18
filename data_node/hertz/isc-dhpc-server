@@ -1,0 +1,4 @@
+#/etc/default/isc-dhcp-server
+
+INTERFACESv4="br-control"
+INTERFACESv6=""

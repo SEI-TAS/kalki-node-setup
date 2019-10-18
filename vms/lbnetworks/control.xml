@@ -1,0 +1,9 @@
+<network>
+    <name>control</name>
+    <bridge name="virbr58"/>
+    <ip address="192.168.58.1" netmask="255.255.255.0">
+        <dhcp>
+            <range start="192.168.58.110" end="192.168.58.254" />
+        </dhcp>
+    </ip>
+</network>
