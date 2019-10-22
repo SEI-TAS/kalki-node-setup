@@ -4,9 +4,7 @@
    "default":
    {
      "httpProxy": "http://proxy.sei.cmu.edu:8080",
-     "httpsProxy": "http://proxy.sei.cmu.edu:8080",
-     "HTTP_PROXY": "http://proxy.sei.cmu.edu:8080",
-     "HTTPS_PROXY": "http://proxy.sei.cmu.edu:8080"
+     "httpsProxy": "http://proxy.sei.cmu.edu:8080"
    }
  }
 }

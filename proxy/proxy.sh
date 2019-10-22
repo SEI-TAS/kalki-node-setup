@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
-PROXY="http://proxy.sei.cmu.edu:8080"
 
-export http_proxy=${PROXY}
-export https_proxy=${PROXY}
-export HTTP_PROXY=${PROXY} 
-export HTTPS_PROXY=${PROXY}
+source env/env_proxy.sh
+
+sudo cp env/env_proxy.sh /etc/profile.d/env_proxy.sh
 
 sudo rm /etc/apt/apt.conf.d/01noproxy
-sudo cp 01proxy /etc/apt/apt.conf.d/
+sudo cp apt/01proxy /etc/apt/apt.conf.d/
 
 cd docker
 bash docker_proxy.sh
