@@ -1,3 +1,4 @@
 {
-  "dns": ["10.64.28.100"]
+  "dns": ["10.64.28.100"],
+  "dns-search": ["ssdlab.sei.cmu.edu"]
 }
