@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-export http_proxy=''
-export https_proxy=''
-export HTTP_PROXY=''
-export HTTPS_PROXY=''
+source env/no_env_proxy.sh
+
+sudo rm /etc/profile.d/env_proxy.sh
 
 sudo rm /etc/apt/apt.conf.d/01proxy
-sudo cp 01noproxy /etc/apt/apt.conf.d/
+sudo cp apt/01noproxy /etc/apt/apt.conf.d/
 
 cd docker
 bash docker_noproxy.sh
