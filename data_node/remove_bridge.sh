@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-IOT_NIC=enp2s0f0
-EXT_NIC=enp2s0f1
+IOT_NIC=enp2s0f1
+EXT_NIC=enp2s0f0
 
 IOT_NIC_IP=10.27.151.127
 EXT_NIC_IP=10.27.152.6
