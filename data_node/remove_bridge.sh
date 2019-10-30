@@ -17,7 +17,7 @@ sudo ifdown $IOT_NIC
 sudo ifup $IOT_NIC
 
 sudo ip addr add ${IOT_NIC_IP}/24 dev $IOT_NIC
-sudo ip addr add ${IOT_NIC_IP}/24 dev $EXT_NIC
+sudo ip addr add ${EXT_NIC_IP}/24 dev $EXT_NIC
 
 sudo ifconfig $IOT_NIC broadcast ${IOT_NIC_BROADCAST}
 sudo ifconfig $EXT_NIC broadcast ${EXT_NIC_BROADCAST}
