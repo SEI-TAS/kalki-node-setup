@@ -6,25 +6,6 @@ update() {
     echo "Update complete"
 }
 
-# Note that for the libvirt-bin daemon to actually listen to incoming connections, the following config changes are needed:
-# - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tcp = 1
-# - /etc/libvirt/libvirtd.conf: uncomment the line #listen_tls = 0
-# - /etc/libvirt/libvirtd.conf: uncomment the line and change to #auth_tcp = "none"
-# - /etc/default/libvirt-bin or /etc/default/libvirtd: set libvirtd_opts to "--listen" , and uncomment.
-install_qemu() {
-    echo "Installing Qemu and Libvirt Daemon..."
-    sudo apt-get -yqq install qemu-system libvirt-bin
-    sudo usermod -a -G kvm $USER
-    echo "Qemu and Libvirt Install Complete"
-}
-
-install_python() {
-    echo "Installing Python..."
-    sudo apt-get -yqq install python python-pip
-    sudo python -m pip install pipenv
-    echo "Python Install Complete"
-}
-
 install_ovs() {
     echo "Installing OVS..."
     sudo apt-get -yqq install openvswitch-common openvswitch-switch openvswitch-dbg ethtool
@@ -45,12 +26,12 @@ install_dhcp_server() {
    sudo apt install isc-dhcp-server
    echo "DHCP server installed"
 }
+
 # Install packages
 echo "Beginning packages setup..."
 update
-install_qemu
 install_ovs
-install_python
+install_docker
 install_dhcp_server
 echo "Finished setting up packages"
 
