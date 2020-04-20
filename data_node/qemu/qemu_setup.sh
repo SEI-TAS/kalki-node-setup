@@ -18,9 +18,17 @@ install_qemu() {
     echo "Qemu and Libvirt Install Complete"
 }
 
+install_dhcp_server() {
+   echo "Installing DHCP server..."
+   sudo apt install isc-dhcp-server
+   # TODO: deploy DHCP config files to proper folders.
+   echo "DHCP server installed"
+}
+
 # Install packages
 echo "Beginning packages setup..."
 install_qemu
+install_dhcp_server
 echo "Finished setting up packages"
 
 # To enable nested VMs, if needed: http://www.server-world.info/en/note?os=Ubuntu_16.04&p=kvm&f=8

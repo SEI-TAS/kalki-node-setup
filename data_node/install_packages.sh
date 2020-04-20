@@ -21,18 +21,9 @@ install_docker() {
     echo "Docker Install Complete"
 }
 
-install_dhcp_server() {
-   echo "Installing DHCP server..."
-   sudo apt install isc-dhcp-server
-   echo "DHCP server installed"
-}
-
 # Install packages
 echo "Beginning packages setup..."
 update
 install_ovs
 install_docker
-install_dhcp_server
 echo "Finished setting up packages"
-
-# To enable nested VMs, if needed: http://www.server-world.info/en/note?os=Ubuntu_16.04&p=kvm&f=8
