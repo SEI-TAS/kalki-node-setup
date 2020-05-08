@@ -2,7 +2,9 @@
 
 BASE_PATH=../../kalki-repos/dn
 
-source ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/prepare_env.sh
+cd ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/
+source prepare_env.sh
+cd ..
 
 export HOST_TZ=$(cat /etc/timezone)
 docker-compose up -d -f ${BASE_PATH}/kalki-iot-interface/docker-compose.yml \
