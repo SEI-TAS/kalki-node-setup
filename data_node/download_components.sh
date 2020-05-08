@@ -11,7 +11,7 @@ get_and_update_repo() {
   git pull
 }
 
-(mkdir -p ../kalki-repos && \
- cd ../kalki-repos && \
+(mkdir -p ../../kalki-repos/dn && \
+ cd ../../kalki-repos/dn && \
  get_and_update_repo "kalki-iot-interface" && \
  get_and_update_repo "kalki-umbox-controller")
