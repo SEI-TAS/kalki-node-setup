@@ -13,6 +13,11 @@ get_and_update_repo() {
   (cd ${repo_name} && git checkout dev && git pull)
 }
 
+if [ -z ${GIT_USER} ]; then
+  echo "Need to supply git username"
+  return 1
+fi
+
 (mkdir -p ../../kalki-repos/dn && \
  cd ../../kalki-repos/dn && \
  get_and_update_repo "kalki-iot-interface" ${GIT_USER} && \
