@@ -7,6 +7,7 @@ source prepare_env.sh
 cd ../../../../kalki-node-setup/data_node
 
 export HOST_TZ=$(cat /etc/timezone)
-docker-compose up -d -f ${BASE_PATH}/kalki-iot-interface/docker-compose.yml \
-                     -f ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/docker-compose.yml
+docker-compose -f ${BASE_PATH}/kalki-iot-interface/docker-compose.yml \
+               -f ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/docker-compose.yml \
+               up -d
 bash compose_logs.sh
