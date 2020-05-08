@@ -1,7 +1,7 @@
 [submodule "data_node/sub/kalki-iot-interface"]
-  path = data_node/sub/kalki-iot-interface
-  url = https://github.com/SEI-TAS/kalki-iot-interface
+    path = data_node/sub/kalki-iot-interface
+    url = https://github.com/SEI-TAS/kalki-iot-interface
+
 [submodule "data_node/sub/kalki-umbox-controller"]
-  path = data_node/sub/kalki-umbox-controller
-  url = https://github.com/SEI-TAS/kalki-umbox-controller
-  
+    path = data_node/sub/kalki-umbox-controller
+    url = https://github.com/SEI-TAS/kalki-umbox-controller
