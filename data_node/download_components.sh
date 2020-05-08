@@ -7,7 +7,7 @@ get_and_update_repo() {
   local git_user="$2"
 
   if [ ! -d "${repo_name}" ]; then
-    git clone https:/${git_user}@github.com/SEI-TAS/${repo_name}.git
+    git clone https://${git_user}@github.com/SEI-TAS/${repo_name}.git
   fi
 
   (cd ${repo_name} && git checkout dev && git pull)
