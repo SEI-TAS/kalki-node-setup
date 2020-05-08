@@ -15,7 +15,7 @@ get_and_update_repo() {
 
 if [ -z ${GIT_USER} ]; then
   echo "Need to supply git username"
-  return 1
+  exit 1
 fi
 
 (mkdir -p ../../kalki-repos/dn && \
