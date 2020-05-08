@@ -5,10 +5,9 @@ get_and_update_repo() {
 
   if [ ! -d "${repo_name}" ]; then
     git clone https://github.com/SEI-TAS/${repo_name}.git
-    git checkout dev
   fi
 
-  git pull
+  (cd ${repo_name} && git checkout dev && git pull)
 }
 
 (mkdir -p ../../kalki-repos/dn && \
