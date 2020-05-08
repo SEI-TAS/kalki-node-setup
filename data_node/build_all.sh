@@ -12,7 +12,9 @@ BASE_PATH=../../kalki-repos/dn
 rm -r dist
 
 mkdir -p dist/ovs-docker-server
+mkdir -p dist/ovs-docker-server/ovs-scripts
 cp ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/*.sh dist/ovs-docker-server/
+cp ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/ovs-scripts/*.sh dist/ovs-docker-server/ovs-scripts/
 cp ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/docker-compose.yml dist/ovs-docker-server/
 
 mkdir -p dist/kalki-iot-interface
