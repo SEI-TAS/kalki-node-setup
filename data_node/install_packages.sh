@@ -6,17 +6,15 @@ update() {
     echo "Update complete"
 }
 
-install_ovs() {
-    echo "Installing OVS..."
-    sudo apt-get -yqq install openvswitch-common openvswitch-switch openvswitch-dbg ethtool
-    sudo systemctl start openvswitch-switch
-    sudo systemctl enable openvswitch-switch
-    echo "OVS Install Complete"
+install_java() {
+    echo "Installing Java OpenJDK..."
+    sudo apt-get -yqq install openjdk-8-jdk
+    echo "Java OpenJDK Install Complete"
 }
 
 install_docker() {
     echo "Installing Docker.."
-    sudo apt-get -yqq install docker.io
+    sudo apt-get -yqq install docker.io docker-compose
     sudo usermod -a -G docker $USER
     echo "Docker Install Complete"
 }
@@ -24,6 +22,6 @@ install_docker() {
 # Install packages
 echo "Beginning packages setup..."
 update
-install_ovs
+install_java
 install_docker
 echo "Finished setting up packages"

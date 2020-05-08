@@ -14,7 +14,7 @@ install_java() {
 
 install_docker() {
     echo "Installing Docker.."
-    sudo apt-get -yqq install docker.io
+    sudo apt-get -yqq install docker.io docker-compose
     sudo usermod -a -G docker $USER
     echo "Docker Install Complete"
 }
