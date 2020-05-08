@@ -22,6 +22,6 @@ install_docker() {
 # Install packages
 echo "Beginning packages setup..."
 update
-install_java
+install_git
 install_docker
 echo "Finished setting up packages"
