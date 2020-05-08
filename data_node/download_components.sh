@@ -1,13 +1,21 @@
 #!/bin/bash
 
-rm -r components
-mkdir -p components
-cd components
+get_and_update_repo() {
+  local repo_name="$1"
 
-wget https://github.com/SEI-TAS/kalki-iot-interface/archive/master.zip
-unzip master.zip
+  if [ ! -d "${repo_name}" ]; then
+    git clone git@github.com:SEI-TAS/${repo_name}.git
+    git checkout dev
+  fi
 
-wget https://github.com/SEI-TAS/kalki-umbox-controller/archive/master.zip
-unzip master.zip
+  git pull
 
-rm master.zip
+}
+
+mkdir -p repos
+cd repos
+
+get_and_update_repo "kalki-iot-interface"
+get_and_update_repo "kalki-umbox-controller"
+
+cd ..
