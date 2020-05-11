@@ -13,7 +13,8 @@ build_and_dist() {
 
   if [ -f ${BASE_PATH}/${component_folder}/create_dist.sh ]; then
     echo "Executing dist script."
-    source ${BASE_PATH}/${component_folder}/create_dist.sh "dist/${component}"
+    (cd ${BASE_PATH}/${component_folder}/ && \
+     bash create_dist.sh "dist/${component}")
   fi
 }
 
