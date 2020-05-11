@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-cd dist/ovs-docker-server/ && source prepare_env.sh && cd ../..
-
 DIST_PATH=dist
 
 # Execute preparation scripts for specific component.
@@ -11,7 +9,7 @@ prepare() {
   if [ -f ${DIST_PATH}/${component}/prepare_env.sh ]; then
     echo "Executing preparation script."
     (cd ${DIST_PATH}/${component}/ && \
-     bash prepare_env.sh)
+     source prepare_env.sh)
   fi
 }
 
@@ -21,7 +19,7 @@ merge_docker_files() {
   for component in "$@"; do
     compose_files="${compose_files} -f $DIST_PATH/$component/docker-compose.yml"
   done
-  echo compose_files
+  echo ${compose_files}
 }
 
 # Actual start of script.
@@ -32,6 +30,5 @@ prepare "ovs-docker-server"
 MERGED_FILES=$(merge_docker_files "kalki-iot-interface" "ovs-docker-server")
 export HOST_TZ=$(cat /etc/timezone)
 docker-compose "${MERGED_FILES}" up -d --no-build
-
 
 bash compose_logs.sh
