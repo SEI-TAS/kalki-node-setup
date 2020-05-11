@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_PATH=../../kalki-repos/dn
+BASE_PATH=../submodules
 
 ( \
   cd ${BASE_PATH} || exit && \

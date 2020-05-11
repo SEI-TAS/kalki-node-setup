@@ -1,0 +1,6 @@
+[submodule "submodules/kalki-iot-interface"]
+	path = submodules/kalki-iot-interface
+	url = https://github.com/SEI-TAS/kalki-iot-interface.git
+[submodule "submodules/kalki-umbox-controller"]
+	path = submodules/kalki-umbox-controller
+	url = https://github.com/SEI-TAS/kalki-umbox-controller.git
