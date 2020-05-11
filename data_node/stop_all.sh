@@ -1,9 +1,31 @@
 #!/usr/bin/env bash
 
-BASE_PATH=../submodules
+DIST_PATH=dist
 
-(cd ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/ && source teardown_env.sh)
+teardown() {
+  local component="$1"
 
-docker-compose -f ${BASE_PATH}/kalki-iot-interface/docker-compose.yml \
-               -f ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/docker-compose.yml \
-               down
+  # Execute prepartion scripts for specific component.
+  if [ -f ${DIST_PATH}/${component}/teardown_env.sh ]; then
+    echo "Executing preparation script."
+    (cd ${DIST_PATH}/${component}/ && \
+     bash teardown_env.sh)
+  fi
+}
+
+# Merge all component docker compose files to start them.
+merge_docker_files() {
+  local compose_files=""
+  for component in "$@"; do
+    compose_files="${compose_files} -f $DIST_PATH/$component/docker-compose.yml"
+  done
+  echo compose_files
+}
+
+# Actual start of script.
+
+teardown "kalki-iot-interface"
+teardown "ovs-docker-server"
+
+MERGED_FILES=$(merge_docker_files "kalki-iot-interface" "ovs-docker-server")
+docker-compose "${MERGED_FILES}" down
