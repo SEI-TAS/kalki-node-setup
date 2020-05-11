@@ -29,6 +29,6 @@ prepare "ovs-docker-server"
 
 MERGED_FILES=$(merge_docker_files "kalki-iot-interface" "ovs-docker-server")
 export HOST_TZ=$(cat /etc/timezone)
-docker-compose "${MERGED_FILES}" up -d --no-build
+docker-compose ${MERGED_FILES} up -d --no-build
 
 bash compose_logs.sh
