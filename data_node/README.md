@@ -4,7 +4,7 @@
 - Git is needed to get this repo and to be able to pull the dependent repos.
 - Docker and Docker-Compose are needed to run the different components.
 
-Note that Java 8, Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash install_packages,sh`. If installing in a different distribution, you may to install these components some other way.
+Note that Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash install_packages,sh`. If installing in a different distribution, you may to install these components some other way.
 
 ## Configuration
 See the configuration details for each dependent repo.
@@ -18,7 +18,7 @@ To build all dependent components:
 
 `bash build_all.sh`
 
-To run all components in an unified docker-compose instance:
+To run all components in a unified docker-compose instance:
 
 `bash run_all.sh`
 
