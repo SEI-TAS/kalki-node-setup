@@ -11,7 +11,7 @@ build_and_dist() {
   mkdir -p dist/${component}
   cp ${BASE_PATH}/${component_folder}/docker-compose.yml dist/${component}/
 
-  if [ ! -f ${BASE_PATH}/${component_folder}/create_dist.sh ]; then
+  if [ -f ${BASE_PATH}/${component_folder}/create_dist.sh ]; then
     echo "Executing dist script."
     source ${BASE_PATH}/${component_folder}/create_dist.sh "dist/${component}"
   fi
