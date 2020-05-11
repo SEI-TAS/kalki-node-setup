@@ -2,20 +2,23 @@
 
 BASE_PATH=../submodules
 
-( \
-  cd ${BASE_PATH} || exit && \
-  (cd kalki-iot-interface && bash build_compose.sh ) && \
-  (cd kalki-umbox-controller/ovs-docker-server && bash build_container.sh ) \
-)
+build_and_dist() {
+  local component="$1"
+  local component_folder="$2"
+
+  (cd ${BASE_PATH}/${component_folder} && bash build_compose.sh )
+
+  mkdir -p dist/${component}
+  cp ${BASE_PATH}/${component_folder}/docker-compose.yml dist/${component}/
+
+  if [ ! -f ${BASE_PATH}/${component_folder}/create_dist.sh ]; then
+    echo "Executing dist script."
+    source ${BASE_PATH}/${component_folder}/create_dist.sh "dist/${component}"
+  fi
+}
 
 # Copy dist scripts to local temp dir.
 rm -r dist
 
-mkdir -p dist/ovs-docker-server
-mkdir -p dist/ovs-docker-server/ovs-scripts
-cp ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/*.sh dist/ovs-docker-server/
-cp ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/ovs-scripts/*.sh dist/ovs-docker-server/ovs-scripts/
-cp ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/docker-compose.yml dist/ovs-docker-server/
-
-mkdir -p dist/kalki-iot-interface
-cp ${BASE_PATH}/kalki-iot-interface/docker-compose.yml dist/kalki-iot-interface/
+build_and_dist "ovs-docker-server" "kalki-umbox-controller/ovs-docker-server"
+build_and_dist "kalki-iot-interface" "kalki-iot-interface"

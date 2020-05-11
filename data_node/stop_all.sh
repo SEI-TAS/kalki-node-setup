@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BASE_PATH=../../kalki-repos/dn
+BASE_PATH=../submodules
 
 (cd ${BASE_PATH}/kalki-umbox-controller/ovs-docker-server/ && source teardown_env.sh)
 
