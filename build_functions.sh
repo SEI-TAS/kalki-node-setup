@@ -15,6 +15,14 @@ update_repo() {
   (cd ${BASE_PATH}/${repo_name} && git checkout ${branch} && git pull)
 }
 
+# Builds images for a lib, build env.
+build_image_lib() {
+  local component_folder="$2"
+
+  # Create images.
+  (cd ${BASE_PATH}/${component_folder} && bash build_dev_container.sh )
+}
+
 # Builds images and dist folders for components.
 build_and_dist() {
   local component="$1"
