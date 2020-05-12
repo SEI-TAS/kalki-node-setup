@@ -17,7 +17,7 @@ update_repo() {
 
 # Builds images for a lib, build env.
 build_image_lib() {
-  local component_folder="$2"
+  local component_folder="$1"
 
   # Create images.
   (cd ${BASE_PATH}/${component_folder} && bash build_dev_container.sh )
