@@ -7,5 +7,6 @@ source ../build_functions.sh
 init_submodules
 
 # Get updated repo info.
+update_repo "kalki-db" dev
 update_repo "kalki-iot-interface" dev
 update_repo "kalki-umbox-controller" dev
