@@ -21,7 +21,7 @@ build_and_dist() {
   local component_folder="$2"
 
   # Create images.
-  (cd ${BASE_PATH}/${component_folder} && bash build_compose.sh )
+  (cd ${BASE_PATH}/${component_folder} && bash build_container.sh )
 
   # Copy docker-compose configs.
   mkdir -p dist/${component}
