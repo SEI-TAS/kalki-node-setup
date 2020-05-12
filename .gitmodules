@@ -4,3 +4,12 @@
 [submodule "submodules/kalki-umbox-controller"]
 	path = submodules/kalki-umbox-controller
 	url = https://github.com/SEI-TAS/kalki-umbox-controller.git
+[submodule "submodules/kalki-db"]
+	path = submodules/kalki-db
+	url = https://github.com/SEI-TAS/kalki-db
+[submodule "submodules/kalki-device-controller"]
+	path = submodules/kalki-device-controller
+	url = https://github.com/SEI-TAS/kalki-device-controller
+[submodule "submodules/kalki-main-controller"]
+	path = submodules/kalki-main-controller
+	url = https://github.com/SEI-TAS/kalki-controller
