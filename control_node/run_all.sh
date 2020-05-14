@@ -12,11 +12,8 @@ prepare "kalki-device-controller"
 # Start them all in compose.
 export HOST_TZ=$(cat /etc/timezone)
 
-# First start kalki-postgres container
-MERGED_FILES=$(merge_docker_files "kalki-db")
-docker-compose ${MERGED_FILES} up -d --no-build
-
-# Wait for the DB container to be up.
+# First start kalki-postgres container separately, and wait for it.
+(cd $DIST_PATH/kalki-db && bash run_postgres_container.sh)
 bash wait_for_postgres.sh kalki-postgres
 
 # Now start the rest
