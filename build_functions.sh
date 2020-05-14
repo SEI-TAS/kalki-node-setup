@@ -28,6 +28,10 @@ build_and_dist() {
   local component="$1"
   local component_folder="$2"
 
+  if [ -z $component_folder ]; then
+    component_folder=$component
+  fi
+
   # Create images.
   echo "---> Building component: $component"
   (cd ${BASE_PATH}/${component_folder} && bash build_container.sh )
