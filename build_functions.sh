@@ -33,7 +33,7 @@ build_and_dist() {
   fi
 
   # Create images.
-  echo "---> Building component: $component"
+  echo ":::: Building component: $component"
   (cd ${BASE_PATH}/${component_folder} && bash build_container.sh )
 
   # Copy docker-compose configs.
