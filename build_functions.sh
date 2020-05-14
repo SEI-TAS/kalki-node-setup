@@ -29,6 +29,7 @@ build_and_dist() {
   local component_folder="$2"
 
   # Create images.
+  echo "---> Building component: $component"
   (cd ${BASE_PATH}/${component_folder} && bash build_container.sh )
 
   # Copy docker-compose configs.
