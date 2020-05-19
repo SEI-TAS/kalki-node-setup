@@ -1,0 +1,20 @@
+version: '2.3'
+services:
+  kalki-main-controller:
+    extends:
+      service: kalki-main-controller
+    depends_on:
+      kalki-postgres:
+        condition: service_healthy
+  kalki-umbox-controller:
+    extends:
+      service: kalki-umbox-controller
+    depends_on:
+      kalki-postgres:
+        condition: service_healthy
+  kalki-device-controller:
+    extends:
+      service: kalki-umbox-controller
+    depends_on:
+      kalki-postgres:
+        condition: service_healthy
