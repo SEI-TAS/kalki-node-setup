@@ -18,8 +18,8 @@ export HOST_TZ=$(cat /etc/timezone)
 #bash wait_for_postgres.sh kalki-postgres
 
 # Now start the rest
-MERGED_FILES=$(merge_docker_files "kalki-db" "kalki-umbox-controller" "kalki-main-controller" "kalki-device-controller")
-docker-compose ${MERGED_FILES} -f docker-compose.yml up -d --no-build
+#MERGED_FILES=$(merge_docker_files "kalki-db" "kalki-umbox-controller" "kalki-main-controller" "kalki-device-controller")
+docker-compose up -d --no-build
 
 # Show logs.
 bash compose_logs.sh
