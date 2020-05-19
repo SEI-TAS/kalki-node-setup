@@ -14,7 +14,7 @@ services:
         condition: service_healthy
   kalki-device-controller:
     extends:
-      service: kalki-umbox-controller
+      service: kalki-device-controller
     depends_on:
       kalki-postgres:
         condition: service_healthy
