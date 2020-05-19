@@ -13,6 +13,7 @@ prepare "kalki-device-controller"
 export HOST_TZ=$(cat /etc/timezone)
 
 # First start kalki-postgres container separately, and wait for it.
+# https://github.com/docker-library/postgres/issues/146
 (cd $DIST_PATH/kalki-db && bash run_postgres_container.sh)
 bash wait_for_postgres.sh kalki-postgres
 
