@@ -1,9 +1,9 @@
 version: '2.3'
 services:
-  kalki-db:
+  kalki-postgres:
     extends:
       file: dist/kalki-db/docker-compose.yml
-      service: kalki-db
+      service: kalki-postgres
   kalki-main-controller:
     extends:
       file: dist/kalki-main-controller/docker-compose.yml
