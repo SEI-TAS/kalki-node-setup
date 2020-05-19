@@ -25,12 +25,3 @@ teardown() {
     cd ../..
   fi
 }
-
-# Merge all component docker compose files to start them.
-merge_docker_files() {
-  local compose_files=""
-  for component in "$@"; do
-    compose_files="${compose_files} -f $DIST_PATH/$component/docker-compose.yml"
-  done
-  echo ${compose_files}
-}
