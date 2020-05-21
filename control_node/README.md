@@ -1,4 +1,4 @@
-# Node-Setup - Data Node
+# Node-Setup - Control Node
 
 ## Prerequisites
 - Git is needed to get this repo and to be able to pull the dependent repos.
