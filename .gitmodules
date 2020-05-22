@@ -1,15 +1,15 @@
 [submodule "submodules/kalki-iot-interface"]
 	path = submodules/kalki-iot-interface
-	url = https://github.com/SEI-TAS/kalki-iot-interface.git
+	url = git@github.com:SEI-TAS/kalki-iot-interface.git
 [submodule "submodules/kalki-umbox-controller"]
 	path = submodules/kalki-umbox-controller
-	url = https://github.com/SEI-TAS/kalki-umbox-controller.git
+	url = git@github.com:SEI-TAS/kalki-umbox-controller.git
 [submodule "submodules/kalki-db"]
 	path = submodules/kalki-db
-	url = https://github.com/SEI-TAS/kalki-db
+	url = git@github.com:SEI-TAS/kalki-db.git
 [submodule "submodules/kalki-device-controller"]
 	path = submodules/kalki-device-controller
-	url = https://github.com/SEI-TAS/kalki-device-controller
+	url = git@github.com:SEI-TAS/kalki-device-controller.git
 [submodule "submodules/kalki-main-controller"]
 	path = submodules/kalki-main-controller
-	url = https://github.com/SEI-TAS/kalki-controller
+	url = git@github.com:SEI-TAS/kalki-controller.git
