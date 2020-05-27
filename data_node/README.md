@@ -14,6 +14,10 @@ To download dependent repos (this needs to be executed every time there is a cha
 
 `bash get_components.sh`
 
+NOTE: If building on a Raspberry Pi or another ARM32 platform, you'll have to run this script before attempting to build the components to get the custom gradle images needed for this platform:
+
+`bash ../deployments/pi/create_gradle_image.sh`
+
 To build all dependent components:
 
 `bash build_all.sh`

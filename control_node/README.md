@@ -7,12 +7,16 @@
 Note that Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash install_packages,sh`. If installing in a different distribution, you may to install these components some other way.
 
 ## Configuration
-See the configuration details for each dependent repo.
+Each dependent repo has its own configuration. However, using the default configuration for all Control Node components should be enough for most deployments.
 
 ## Usage
 To download dependent repos (this needs to be executed every time there is a change to the dependent repos):
 
 `bash get_components.sh`
+
+NOTE: If building on a Raspberry Pi or another ARM32 platform, you'll have to run this script before attempting to build the components to get the custom gradle images needed for this platform:
+
+`bash ../deployments/pi/create_gradle_image.sh`
 
 To build all dependent components:
 
