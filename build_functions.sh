@@ -26,7 +26,8 @@ copy_deployment_configs() {
     exit 1
   fi
 
-  cp -r $deployment_path/$node_name/* ../submodules/
+  echo "Copying configurations for deployment:"
+  cp -r -v $deployment_path/$node_name/* ${BASE_PATH}/
 }
 
 # Gets newest changes for repo.
