@@ -4,7 +4,10 @@
 source ../build_functions.sh
 
 # Clean dist
-rm -r $DIST_FOLDER
+rm -r ${DIST_FOLDER}
+
+# Copy configs to temp submodules.
+copy_deployment_configs "$1"
 
 # Build images and dist folders for all components.
 build_image_lib "kalki-db"
