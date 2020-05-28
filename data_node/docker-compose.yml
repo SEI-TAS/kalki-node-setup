@@ -1,0 +1,27 @@
+version: '2.3'
+services:
+  kalki-postgres:
+    extends:
+      file: dist/kalki-db/docker-compose.yml
+      service: kalki-postgres
+  kalki-main-controller:
+    extends:
+      file: dist/kalki-main-controller/docker-compose.yml
+      service: kalki-main-controller
+    depends_on:
+      kalki-postgres:
+        condition: service_healthy
+  kalki-umbox-controller:
+    extends:
+      file: dist/kalki-umbox-controller/docker-compose.yml
+      service: kalki-umbox-controller
+    depends_on:
+      kalki-postgres:
+        condition: service_healthy
+  kalki-device-controller:
+    extends:
+      file: dist/kalki-device-controller/docker-compose.yml
+      service: kalki-device-controller
+    depends_on:
+      kalki-postgres:
+        condition: service_healthy
