@@ -11,6 +11,7 @@ init_submodules() {
 # Copies deployment configs to dist folder.
 copy_deployment_configs() {
   local deployment="$1"
+  local node_name="$2"
 
   # Check if we got the deployment.
   if [ -z $deployment ]; then
@@ -25,7 +26,7 @@ copy_deployment_configs() {
     exit 1
   fi
 
-  cp -r $deployment_path ../submodules/
+  cp -r $deployment_path/$node_name/* ../submodules/
 }
 
 # Gets newest changes for repo.
