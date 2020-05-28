@@ -3,7 +3,7 @@ services:
   kalki-iot-interface:
     extends:
       file: dist/kalki-iot-interface/docker-compose.yml
-      service: kalki-main-controller
+      service: kalki-iot-interface
   kalki-iot-wemo:
     extends:
       file: dist/kalki-iot-interface/docker-compose.yml
