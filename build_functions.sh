@@ -20,12 +20,12 @@ copy_deployment_configs() {
 
   # Check if the given deployment exists.
   local deployment_path="../deployments/$deployment"
-  if [ ! -f $local_deployment_path ]; then
+  if [ ! -f $deployment_path ]; then
     echo "Given deployment not found! $deployment"
     exit 1
   fi
 
-  cp -r $local_deployment_path ../submodules/
+  cp -r $deployment_path ../submodules/
 }
 
 # Gets newest changes for repo.
