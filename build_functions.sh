@@ -20,7 +20,7 @@ copy_deployment_configs() {
 
   # Check if the given deployment exists.
   local deployment_path="../deployments/$deployment"
-  if [ ! -f $deployment_path ]; then
+  if [ ! -d $deployment_path ]; then
     echo "Given deployment not found: $deployment_path"
     exit 1
   fi
