@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-#export CONTROL_NIC=enp0s31f6
 export CONTROL_NIC=br-control
-export IOT_NIC=enp2s0f1
-export EXT_NIC=enp2s0f0
+export IOT_NIC=eth1
+export EXT_NIC=eth2
 
-export CONTROL_NET_PREFIX=10.27.153
+export CONTROL_NET_PREFIX=10.27.200
 export IP_ON_CONTROL_NIC=${CONTROL_NET_PREFIX}.2
 
 export CONTROL_IP_NET=${CONTROL_NET_PREFIX}.0/24
