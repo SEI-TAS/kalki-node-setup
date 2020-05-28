@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
 source ../run_functions.sh
-docker-compose logs -f
+MERGED_FILES=$(merge_docker_files "kalki-iot-interface" "ovs-docker-server")
+docker-compose ${MERGED_FILES} logs -f
