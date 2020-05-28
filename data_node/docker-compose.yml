@@ -1,27 +1,14 @@
 version: '2.3'
 services:
-  kalki-postgres:
+  kalki-iot-interface:
     extends:
-      file: dist/kalki-db/docker-compose.yml
-      service: kalki-postgres
-  kalki-main-controller:
-    extends:
-      file: dist/kalki-main-controller/docker-compose.yml
+      file: dist/kalki-iot-interface/docker-compose.yml
       service: kalki-main-controller
-    depends_on:
-      kalki-postgres:
-        condition: service_healthy
-  kalki-umbox-controller:
+  kalki-iot-wemo:
     extends:
-      file: dist/kalki-umbox-controller/docker-compose.yml
-      service: kalki-umbox-controller
-    depends_on:
-      kalki-postgres:
-        condition: service_healthy
-  kalki-device-controller:
+      file: dist/kalki-iot-interface/docker-compose.yml
+      service: kalki-iot-wemo
+  ovs-docker-service:
     extends:
-      file: dist/kalki-device-controller/docker-compose.yml
-      service: kalki-device-controller
-    depends_on:
-      kalki-postgres:
-        condition: service_healthy
+      file: dist/ovs-docker-service/docker-compose.yml
+      service: ovs-docker-service
