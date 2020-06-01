@@ -37,8 +37,9 @@ merge_docker_files() {
 
 export_image() {
   local component="$1"
+  local folder="$2"
   echo "Exporting image for component $component"
-  docker save kalki/${component}:latest | gzip > ${component}.tar.gz
+  docker save kalki/${component}:latest | gzip > ${folder}/${component}.tar.gz
 }
 
 import_image() {
