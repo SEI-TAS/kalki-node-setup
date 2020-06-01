@@ -16,7 +16,7 @@ cp README.md ${EXPORT_FOLDER}/
 
 cp -R ./dist ${EXPORT_FOLDER}/
 
-export_image "kalki-db"
+export_image "kalki-postgres"
 export_image "kalki-umbox-controller"
 export_image "kalki-main-controller"
 export_image "kalki-device-controller"
