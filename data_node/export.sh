@@ -20,8 +20,9 @@ echo "Copying distribution (docker compose files and component scripts)..."
 cp -R ./dist ${EXPORT_FOLDER}/
 
 echo "Exporting docker images..."
-export_image "kalki-iot-interface"
-export_image "ovs-docker-server"
+export_image "kalki-iot-interface" ${EXPORT_FOLDER}
+export_image "kalki-iot-wemo" ${EXPORT_FOLDER}
+export_image "kalki-ovs-docker-server" ${EXPORT_FOLDER}
 
 echo "Creating compressed output file..."
 rm data_node_dist.tar.gz
