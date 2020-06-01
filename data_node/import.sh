@@ -14,6 +14,7 @@ tar -zxvf data_node_dist.tar.gz
 
 echo "Importing docker images..."
 import_image "kalki-iot-interface" ${DIST_FOLDER}
-import_image "ovs-docker-server" ${DIST_FOLDER}
+import_image "kalki-iot-wemo" ${DIST_FOLDER}
+import_image "kalki-ovs-docker-server" ${DIST_FOLDER}
 
 echo "Finished"
