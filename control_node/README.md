@@ -9,7 +9,7 @@ Note that Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash
 ## Configuration
 Each dependent repo has its own configuration. However, using the default configuration for all Control Node components should be enough for most deployments.
 
-## Usage
+## Building
 To download dependent repos (this needs to be executed every time there is a change to the dependent repos):
 
 `bash get_components.sh`
@@ -22,9 +22,18 @@ To build all dependent components:
 
 `bash build_all.sh`
 
-Note that this will create a "dist" folder. The control_node folder, along with this dist subfolder, can be moved to a deployment installation, and contains all that is needed to run the components, except for the docker images, which need to be exported as well.
+## Deployment
+If running from the same computer where the build was generated, no deployment is needed.
 
-To run all components in a unified docker-compose instance:
+It is possible to create a distribution tar.gz that can be copied to a deployment installation, and contains all that is needed to run the components. To generate such a file and deploy it in another computer, follow these steps:
+
+1. Execute `bash export.sh`
+1. Copy the `control_node_dist.tar.gz` file and the file `import.sh` to the deployment computer
+1. Install the deployment executing `bash import.sh`
+
+
+## Running
+To run all components in a unified docker-compose instance, execute this script from the folder it is in:
 
 `bash run_all.sh`
 

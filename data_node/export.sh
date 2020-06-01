@@ -24,6 +24,7 @@ export_image "kalki-iot-interface"
 export_image "ovs-docker-server"
 
 echo "Creating compressed output file..."
+rm data_node_dist.tar.gz
 tar -zcvf data_node_dist.tar.gz ./${EXPORT_FOLDER}
 
 #echo "Deleting temporary folder"

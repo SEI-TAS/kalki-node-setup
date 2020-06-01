@@ -26,6 +26,7 @@ export_image "kalki-main-controller" ${EXPORT_FOLDER}
 export_image "kalki-device-controller" ${EXPORT_FOLDER}
 
 echo "Creating compressed output file..."
+rm control_node_dist.tar.gz
 tar -zcvf control_node_dist.tar.gz ./${EXPORT_FOLDER}
 
 #echo "Deleting temporary folder"

@@ -28,10 +28,17 @@ To build all dependent components:
 
 Where <deployment> refers to a set of configurations for the specific deployment being built. This has to match a subfolder inside the `deployments` folder in the root of this repo. See the Configuration section for more information about the contents of this folder.
 
-Note that this will create a "dist" folder. The data_node folder, along with this dist subfolder, can be moved to a deployment installation, and contains all that is needed to run the components, except for the docker images, which need to be exported as well.
+## Deployment
+If running from the same computer where the build was generated, no deployment is needed.
+
+It is possible to create a distribution tar.gz that can be copied to a deployment installation, and contains all that is needed to run the components. To generate such a file and deploy it in another computer, follow these steps:
+
+1. Execute `bash export.sh`
+1. Copy the `data_node_dist.tar.gz` file and the file `import.sh` to the deployment computer
+1. Install the deployment executing `bash import.sh`
 
 ## Running
-To run all components in a unified docker-compose instance, execute this either from this repo folder, or from a generated distribution folder:
+To run all components in a unified docker-compose instance, execute this script from the folder it is in:
 
 `bash run_all.sh`
 
