@@ -6,3 +6,4 @@
 **/dist/
 control_node/run_functions.sh
 data_node/run_functions.sh
+export/

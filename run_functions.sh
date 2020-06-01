@@ -34,3 +34,13 @@ merge_docker_files() {
   done
   echo ${compose_files}
 }
+
+export_image() {
+  local component="$1"
+  docker save ${component}:latest | gzip > ${component}.tar.gz
+}
+
+import_image() {
+  local component="$1"
+  docker load < ${component}.tar.gz
+}
