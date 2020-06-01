@@ -41,9 +41,3 @@ export_image() {
   echo "Exporting image for component $component"
   docker save kalki/${component}:latest | gzip > ${folder}/${component}.tar.gz
 }
-
-import_image() {
-  local component="$1"
-  echo "Importing image for component $component"
-  docker load < ${component}.tar.gz
-}
