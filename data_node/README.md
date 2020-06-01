@@ -12,13 +12,13 @@ Each dependent repo has its own configuration. For the Data Node, there are two 
 Once you have a proper configuration for the components, create a folder in the `deployments` folder in the root of this repo for your deployment, and inside a subfolder call `data_node`. Inside this, create sub-folders for each dependent repo that has a configuration with that repo's name. Inside put the configuration files that are needed, using the same folder structure from their respective repos.
 
 ## Building
-To download dependent repos (this needs to be executed every time there is a change to the dependent repos)
-
-`bash get_components.sh`
-
 NOTE: If building on a Raspberry Pi or another ARM32 platform, you'll have to run this script before attempting to build the components to get the custom gradle images needed for this platform (this only needs to be done once per machine):
 
 `bash ../deployments/pi/create_gradle_image.sh`
+
+To download dependent repos (this needs to be executed every time there is a change to the dependent repos)
+
+`bash get_components.sh`
 
 Note that this assumes you have SSH Github access configured in the computer you are running this on.
 
