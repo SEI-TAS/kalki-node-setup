@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
+if [ ! -f run_functions.sh ]; then
+  cp ../run_functions.sh .
+fi
+
 # Include functions.
-source ../run_functions.sh
+source run_functions.sh
 
 # Prepare envs for each component.
 prepare "kalki-db"
