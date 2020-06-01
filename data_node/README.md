@@ -31,10 +31,11 @@ Where <deployment> refers to a set of configurations for the specific deployment
 ## Deployment
 If running from the same computer where the build was generated, no deployment is needed.
 
-It is possible to create a distribution tar.gz that can be copied to a deployment installation, and contains all that is needed to run the components. To generate such a file and deploy it in another computer, follow these steps:
+It is possible to create a distribution tar.gz that can be copied to a deployment installation, and contains all that is needed to run the components. To generate such a file and deploy it in another computer, follow these steps. Note that this assumes that `gz` is available on the build computer, and `tar` is available on the deployment computer.
 
 1. Execute `bash export.sh`
 1. Copy the `data_node_dist.tar.gz` file and the file `import.sh` to the deployment computer
+1. Ensure that Docker is installed in the deployment computer
 1. Install the deployment executing `bash import.sh`
 
 ## Running
