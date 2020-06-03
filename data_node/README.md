@@ -14,7 +14,7 @@ Once you have a proper configuration for the components, create a folder in the 
 ## Building
 NOTE: If building on a Raspberry Pi or another ARM32 platform, you'll have to run this script before attempting to build the components to get the custom gradle images needed for this platform (this only needs to be done once per machine):
 
-`bash ../deployments/pi/create_gradle_image.sh`
+`bash ../platforms/pi/create_gradle_image.sh`
 
 To download dependent repos (this needs to be executed every time there is a change to the dependent repos)
 
