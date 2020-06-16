@@ -25,3 +25,6 @@ services:
     depends_on:
       kalki-postgres:
         condition: service_healthy
+        
+volumes:
+  kalki-pgdata:
