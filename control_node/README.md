@@ -37,6 +37,8 @@ To run all components in a unified docker-compose instance, execute this script 
 
 `bash run_all.sh`
 
+NOTE: If you want to reset the DB, add the `--reset_db` command line argument.
+
 If you Ctrl+C, docker-compose will continue running the components. To see the logs again:
 
 `bash compose_logs.sh`
