@@ -4,7 +4,7 @@
 source ../build_functions.sh
 
 # Clean dist
-rm -r ${DIST_FOLDER}
+sudo rm -r ${DIST_FOLDER}
 
 # Copy configs to temp submodules.
 copy_deployment_configs "$1" data_node
