@@ -4,7 +4,7 @@
 source ../build_functions.sh
 
 # Clean dist
-rm -r $DIST_FOLDER
+sudo rm -r $DIST_FOLDER
 
 # Build images and dist folders for all components.
 build_image_lib "kalki-db"
