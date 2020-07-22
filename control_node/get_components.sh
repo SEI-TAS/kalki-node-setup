@@ -7,7 +7,7 @@ source ../build_functions.sh
 init_submodules
 
 # Get updated repo info.
-BRANCH=tags/1.6.0
+BRANCH=master
 update_repo "kalki-db" $BRANCH
 update_repo "kalki-umbox-controller" $BRANCH
 update_repo "kalki-main-controller" $BRANCH
