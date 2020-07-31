@@ -2,7 +2,7 @@
 
 ## Prerequisites
 - Git is needed to get this repo and to be able to pull the dependent repos.
-- Docker and Docker-Compose 1.16.0+ are needed to run the different components.
+- Docker and Docker-Compose 1.18.0+ are needed to run the different components.
 
 Note that Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash install_packages,sh`. If installing in a different distribution, you may to install these components some other way.
 
