@@ -11,6 +11,7 @@ source run_functions.sh
 if [ "$1" == "--reset_db" ]; then
   echo "DB reset requested, removing existing DB volume if any..."
   docker volume rm controlnode_kalki-pgdata
+  docker volume rm control_node_kalki-pgdata
 fi
 
 # Prepare envs for each component.
