@@ -8,7 +8,7 @@ fi
 source run_functions.sh
 
 # Clear DB volume if requested
-if [ "$1" == "--reset_db" ]; then
+if [ "$1" == "--reset_db" ] || [ "$1" == "test" ]; then
   echo "DB reset requested, removing existing DB volume if any..."
   docker volume rm kalki-pgdata
 fi
@@ -21,6 +21,7 @@ prepare "kalki-device-controller"
 
 # Start them all in compose.
 export HOST_TZ=$(cat /etc/timezone)
+export CMD_PARAMS="$@"
 docker-compose up -d --no-build
 
 # Show logs.
