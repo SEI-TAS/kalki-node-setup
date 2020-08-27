@@ -7,7 +7,7 @@ source ../build_functions.sh
 sudo rm -r ${DIST_FOLDER}
 
 # Check if we got the deployment.
-if [ -z $deployment ]; then
+if [ -z "$1" ]; then
   echo "No deployment provided."
 else
   # Copy configs to temp submodules.
