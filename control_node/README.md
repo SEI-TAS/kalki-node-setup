@@ -7,7 +7,9 @@
 Note that Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash install_packages,sh`. If installing in a different distribution, you may to install these components some other way.
 
 ## Configuration
-Each dependent repo has its own configuration. However, using the default configuration for all Control Node components should be enough for most deployments.
+Each dependent repo has its own configuration. However, using the default configuration for all Control Node components should be enough for most deployments. If changes are needed, for example to connect to non-default databases, a deployment configuration can be created.
+
+Once you have a proper configuration for the components, create a folder in the `deployments` folder in the root of this repo for your deployment, and inside a subfolder called `control_node`. Inside this, create sub-folders for each dependent repo that has a configuration with that repo's name. Inside put the configuration files that are needed, using the same folder structure from their respective repos.
 
 ## Building
 NOTE: If building on a Raspberry Pi or another ARM32 platform, you'll have to run this script before attempting to build the components to get the custom gradle images needed for this platform:
@@ -20,7 +22,9 @@ To download dependent repos (this needs to be executed every time there is a cha
 
 To build all dependent components:
 
-`bash build_all.sh`
+`bash build_all.sh <deployment>`
+
+Where <deployment> refers to a set of configurations for the specific deployment being built. This has to match a subfolder inside the `deployments` folder in the root of this repo. See the Configuration section for more information about the contents of this folder. THIS PARAMETER IS OPTIONAL, and most of the time won't be needed.
 
 ## Deployment
 If running from the same computer where the build was generated, no deployment is needed.
