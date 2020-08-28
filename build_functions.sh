@@ -42,7 +42,7 @@ build_image_lib() {
   local component_folder="$1"
 
   # Create images.
-  (cd ${BASE_PATH}/${component_folder} && bash build_dev_container.sh -skip_tests )
+  (cd ${BASE_PATH}/${component_folder} && bash build_dev_container.sh --skip_tests )
 }
 
 # Builds images and dist folders for component.
@@ -56,7 +56,7 @@ build_and_dist() {
 
   # Create images.
   echo ":::: Building component: $component"
-  (cd ${BASE_PATH}/${component_folder} && bash build_container.sh -skip_tests )
+  (cd ${BASE_PATH}/${component_folder} && bash build_container.sh --skip_tests )
 
   # Copy docker-compose configs.
   mkdir -p ${DIST_FOLDER}/${component}
