@@ -9,7 +9,7 @@ prepare() {
   if [ -f ${DIST_PATH}/${component}/prepare_env.sh ]; then
     echo "Executing preparation script."
     cd ${DIST_PATH}/${component}
-    source prepare_env.sh
+    source prepare_env.sh || exit 1
     cd ../..
   fi
 }
