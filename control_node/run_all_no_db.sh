@@ -15,7 +15,7 @@ prepare "kalki-device-controller"
 # Start them all in compose.
 export HOST_TZ=$(cat /etc/timezone)
 export CMD_PARAMS="$@"
-docker-compose up -d -f docker-compose-no-db.yml --no-build
+docker-compose -f docker-compose-no-db.yml up -d --no-build
 
 # Show logs.
 bash compose_logs.sh
