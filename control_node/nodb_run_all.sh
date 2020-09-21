@@ -9,6 +9,9 @@ prepare "kalki-umbox-controller"
 prepare "kalki-main-controller"
 prepare "kalki-device-controller"
 
+# Copy kalki-umboxcontroller tests in case they are needed.
+cp -r dist/kalki-umbox-controller/tests/ ./tests/
+
 # Start them all in compose.
 export HOST_TZ=$(cat /etc/timezone)
 export CMD_PARAMS="$@"
