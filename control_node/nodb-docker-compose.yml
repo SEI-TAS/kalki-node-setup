@@ -1,0 +1,30 @@
+version: '2.0'
+services:
+  kalki-main-controller:
+    image: kalki/kalki-main-controller
+    container_name: kalki-main-controller
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}
+    command: ${CMD_PARAMS}
+    volumes:
+      - ./logs:/logs
+  kalki-umbox-controller:
+    image: kalki/kalki-umbox-controller
+    container_name: kalki-umbox-controller
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}
+    command: ${CMD_PARAMS}
+    volumes:
+      - ./logs:/logs
+      - ./tests:/kalki-umbox-controller/tests
+  kalki-device-controller:
+    image: kalki/kalki-device-controller
+    container_name: kalki-device-controller
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}
+    command: ${CMD_PARAMS}
+    volumes:
+      - ./logs:/logs

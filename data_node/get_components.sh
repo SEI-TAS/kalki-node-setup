@@ -7,7 +7,7 @@ source ../build_functions.sh
 init_submodules
 
 # Get updated repo info.
-BRANCH=master
+BRANCH=dev
 update_repo "kalki-db" $BRANCH
 update_repo "kalki-iot-interface" $BRANCH
 update_repo "kalki-umbox-controller" $BRANCH

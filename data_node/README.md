@@ -2,14 +2,14 @@
 
 ## Prerequisites
 - Git is needed to get this repo and to be able to pull the dependent repos.
-- Docker and Docker-Compose 1.16.0+ are needed to run the different components.
+- Docker and Docker-Compose 1.18.0+ are needed to run the different components.
 
 Note that Docker and Docker-Compose can be installed in Debian/Ubuntu with `bash install_packages,sh`. If installing in a different distribution, you may to install these components some other way.
 
 ## Configuration
 Each dependent repo has its own configuration. For the Data Node, there are two components that need specific configurations ovs-docker-server and kalki-iot-interface. More specifically, ovs-docker-server needs to have the 3 NICs of the Data Node properly configured, as well as the contorl plane network and IP of the control node. The kalki-iot-interface needs to be configured to have the proper Control Node IP address. See details of their config files in the corresponding repos (kalki-umbox-controller/ovs-docker-server and kalki-iot-interface).
 
-Once you have a proper configuration for the components, create a folder in the `deployments` folder in the root of this repo for your deployment, and inside a subfolder call `data_node`. Inside this, create sub-folders for each dependent repo that has a configuration with that repo's name. Inside put the configuration files that are needed, using the same folder structure from their respective repos.
+Once you have a proper configuration for the components, create a folder in the `deployments` folder in the root of this repo for your deployment, and inside a subfolder called `data_node`. Inside this, create sub-folders for each dependent repo that has a configuration with that repo's name. Inside put the configuration files that are needed, using the same folder structure from their respective repos.
 
 ## Building
 NOTE: If building on a Raspberry Pi or another ARM32 platform, you'll have to run this script before attempting to build the components to get the custom gradle images needed for this platform (this only needs to be done once per machine):
